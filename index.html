@@ -42,6 +42,7 @@
       border-radius: 18px;
       padding: 22px;
       box-shadow: 0 4px 18px rgba(0,0,0,.08);
+      margin-bottom: 20px;
     }
 
     h2 {
@@ -64,10 +65,6 @@
       outline: none;
     }
 
-    input:focus {
-      border-color: #2563eb;
-    }
-
     button {
       width: 100%;
       margin-top: 20px;
@@ -78,11 +75,10 @@
       color: white;
       font-size: 17px;
       font-weight: bold;
-      cursor: pointer;
     }
 
-    button:active {
-      transform: scale(.98);
+    .logout {
+      background: #dc2626;
     }
 
     #message {
@@ -109,11 +105,6 @@
       padding: 15px;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
-      background: #fafafa;
-    }
-
-    .store strong {
-      font-size: 18px;
     }
 
     .hidden {
@@ -130,16 +121,30 @@
 
 <div class="container">
 
-  <div id="loading" class="card">
-    Санҷиши иҷозат...
+  <!-- LOGIN -->
+  <div id="loginBox" class="card">
+    <h2>🔐 Воридшавӣ</h2>
+
+    <label>Email</label>
+    <input id="email" type="email" placeholder="Email-и шумо">
+
+    <label>Парол</label>
+    <input id="password" type="password" placeholder="Парол">
+
+    <button onclick="login()">
+      🔑 Ворид шудан
+    </button>
+
+    <div id="loginMessage"></div>
   </div>
 
+
+  <!-- DIRECTOR PANEL -->
   <div id="panel" class="card hidden">
 
     <h2>➕ Илова кардани мағоза</h2>
 
     <label>Номи мағоза</label>
-
     <input
       id="storeName"
       type="text"
@@ -147,7 +152,6 @@
     >
 
     <label>Суроға</label>
-
     <input
       id="storeAddress"
       type="text"
@@ -164,268 +168,287 @@
 
     <div id="stores"></div>
 
+    <button class="logout" onclick="logout()">
+      🚪 Баромадан
+    </button>
+
   </div>
 
 </div>
 
+
 <script>
 
-  /* ==============================
-     SUPABASE
-  ============================== */
+const SUPABASE_URL =
+  "https://hyfcgiipstcuobjtnyvz.supabase.co";
 
-  const SUPABASE_URL =
-    "https://hyfcgiipstcuobjtnyvz.supabase.co";
-
-  const SUPABASE_ANON_KEY =
-    "sb_publishable_C6rL2SmXOXwU8ZzJoX4z0Q_1OvXGPFu";
+const SUPABASE_ANON_KEY =
+  "sb_publishable_C6rL2SmXOXwU8ZzJoX4z0Q_1OvXGPFu";
 
 
-  const supabaseClient = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
 
-  /* ==============================
-     CHECK DIRECTOR
-  ============================== */
+// LOGIN
+async function login() {
 
-  async function checkDirector() {
+  const email =
+    document.getElementById("email").value.trim();
 
-    const loading =
-      document.getElementById("loading");
+  const password =
+    document.getElementById("password").value;
 
-    const panel =
-      document.getElementById("panel");
+  const msg =
+    document.getElementById("loginMessage");
 
+  if (!email || !password) {
 
-    const {
-      data: { user },
-      error
-    } = await supabaseClient.auth.getUser();
+    msg.className = "error";
+    msg.innerText =
+      "⚠️ Email ва паролро ворид кунед.";
 
+    return;
+  }
 
-    if (error || !user) {
-
-      loading.innerHTML =
-        "❌ Шумо ба аккаунт ворид нашудаед.";
-
-      return;
-    }
+  msg.className = "";
+  msg.style.display = "block";
+  msg.innerText = "⏳ Ворид шуда истодааст...";
 
 
-    const {
-      data: profile,
-      error: profileError
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
+  const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
 
 
-    if (
-      profileError ||
-      !profile ||
-      profile.role !== "director"
-    ) {
+  if (error) {
 
-      loading.innerHTML =
-        "⛔ Дастрасӣ танҳо барои директор иҷозат аст.";
+    msg.className = "error";
+    msg.innerText =
+      "❌ " + error.message;
 
-      return;
-    }
-
-
-    loading.classList.add("hidden");
-
-    panel.classList.remove("hidden");
-
-    loadStores();
+    return;
   }
 
 
-  /* ==============================
-     ADD STORE
-  ============================== */
+  msg.className = "success";
+  msg.innerText =
+    "✅ Ворид шудед.";
 
-  async function addStore() {
-
-    const name =
-      document.getElementById("storeName")
-        .value.trim();
+  checkDirector();
+}
 
 
-    const address =
-      document.getElementById("storeAddress")
-        .value.trim();
+// CHECK DIRECTOR
+async function checkDirector() {
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
 
 
-    const message =
-      document.getElementById("message");
-
-
-    if (!name || !address) {
-
-      message.className = "error";
-
-      message.innerText =
-        "⚠️ Номи мағоза ва суроға ҳатмист.";
-
-      return;
-    }
-
-
-    message.className = "";
-
-    message.style.display = "block";
-
-    message.innerText =
-      "⏳ Илова шуда истодааст...";
-
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("stores")
-        .insert([
-          {
-            name: name,
-            address: address
-          }
-        ])
-        .select();
-
-
-    if (error) {
-
-      console.error(error);
-
-      message.className = "error";
-
-      message.innerText =
-        "❌ Хато: " + error.message;
-
-      return;
-    }
-
-
-    message.className = "success";
-
-    message.innerText =
-      "✅ Мағоза бомуваффақият илова шуд!";
-
-
-    document.getElementById("storeName").value = "";
-
-    document.getElementById("storeAddress").value = "";
-
-
-    loadStores();
+  if (!user) {
+    return;
   }
 
 
-  /* ==============================
-     LOAD STORES
-  ============================== */
+  const { data: profile, error } =
+    await supabaseClient
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
 
-  async function loadStores() {
 
-    const storesBox =
-      document.getElementById("stores");
+  if (error || !profile) {
 
+    document.getElementById("loginMessage").className = "error";
+
+    document.getElementById("loginMessage").innerText =
+      "⛔ Барои ин аккаунт профили director сохта нашудааст.";
+
+    return;
+  }
+
+
+  if (profile.role !== "director") {
+
+    document.getElementById("loginMessage").className = "error";
+
+    document.getElementById("loginMessage").innerText =
+      "⛔ Ин аккаунт директор нест.";
+
+    await supabaseClient.auth.signOut();
+
+    return;
+  }
+
+
+  document.getElementById("loginBox")
+    .classList.add("hidden");
+
+  document.getElementById("panel")
+    .classList.remove("hidden");
+
+  loadStores();
+}
+
+
+// ADD STORE
+async function addStore() {
+
+  const name =
+    document.getElementById("storeName").value.trim();
+
+  const address =
+    document.getElementById("storeAddress").value.trim();
+
+  const message =
+    document.getElementById("message");
+
+
+  if (!name || !address) {
+
+    message.className = "error";
+
+    message.innerText =
+      "⚠️ Номи мағоза ва суроға ҳатмист.";
+
+    return;
+  }
+
+
+  message.className = "";
+
+  message.style.display = "block";
+
+  message.innerText =
+    "⏳ Илова шуда истодааст...";
+
+
+  const { error } =
+    await supabaseClient
+      .from("stores")
+      .insert([
+        {
+          name: name,
+          address: address
+        }
+      ]);
+
+
+  if (error) {
+
+    message.className = "error";
+
+    message.innerText =
+      "❌ Хато: " + error.message;
+
+    return;
+  }
+
+
+  message.className = "success";
+
+  message.innerText =
+    "✅ Мағоза бомуваффақият илова шуд!";
+
+
+  document.getElementById("storeName").value = "";
+
+  document.getElementById("storeAddress").value = "";
+
+
+  loadStores();
+}
+
+
+// LOAD STORES
+async function loadStores() {
+
+  const storesBox =
+    document.getElementById("stores");
+
+  storesBox.innerHTML =
+    "⏳ Бор шуда истодааст...";
+
+
+  const { data, error } =
+    await supabaseClient
+      .from("stores")
+      .select("*")
+      .order("id", { ascending: false });
+
+
+  if (error) {
 
     storesBox.innerHTML =
-      "⏳ Бор шуда истодааст...";
+      "❌ " + error.message;
 
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("stores")
-        .select("*")
-        .order("id", {
-          ascending: false
-        });
-
-
-    if (error) {
-
-      storesBox.innerHTML =
-        "❌ " + error.message;
-
-      return;
-    }
-
-
-    if (!data || data.length === 0) {
-
-      storesBox.innerHTML =
-        "Ҳоло ягон мағоза нест.";
-
-      return;
-    }
-
-
-    storesBox.innerHTML = "";
-
-
-    data.forEach(store => {
-
-      const div =
-        document.createElement("div");
-
-
-      div.className = "store";
-
-
-      div.innerHTML = `
-        <strong>
-          🏪 ${escapeHtml(store.name)}
-        </strong>
-
-        <br><br>
-
-        📍 ${escapeHtml(
-          store.address || "Суроға нест"
-        )}
-      `;
-
-
-      storesBox.appendChild(div);
-
-    });
+    return;
   }
 
 
-  /* ==============================
-     SECURITY
-  ============================== */
+  if (!data || data.length === 0) {
 
-  function escapeHtml(text) {
+    storesBox.innerHTML =
+      "Ҳоло ягон мағоза нест.";
+
+    return;
+  }
+
+
+  storesBox.innerHTML = "";
+
+
+  data.forEach(store => {
 
     const div =
       document.createElement("div");
 
-    div.textContent = text;
+    div.className = "store";
 
-    return div.innerHTML;
-  }
+    div.innerHTML = `
+      <strong>🏪 ${escapeHtml(store.name)}</strong>
+      <br><br>
+      📍 ${escapeHtml(store.address || "Суроға нест")}
+    `;
+
+    storesBox.appendChild(div);
+
+  });
+}
 
 
-  /* ==============================
-     START
-  ============================== */
+// ESCAPE HTML
+function escapeHtml(text) {
 
-  checkDirector();
+  const div =
+    document.createElement("div");
+
+  div.textContent = text;
+
+  return div.innerHTML;
+}
+
+
+// LOGOUT
+async function logout() {
+
+  await supabaseClient.auth.signOut();
+
+  location.reload();
+}
+
+
+// CHECK SESSION
+checkDirector();
 
 </script>
 
 </body>
-      </html>
+  </html>
