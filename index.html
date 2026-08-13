@@ -78,6 +78,7 @@
       color: white;
       font-size: 17px;
       font-weight: bold;
+      cursor: pointer;
     }
 
     button:active {
@@ -108,6 +109,7 @@
       padding: 15px;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
+      background: #fafafa;
     }
 
     .store strong {
@@ -137,6 +139,7 @@
     <h2>➕ Илова кардани мағоза</h2>
 
     <label>Номи мағоза</label>
+
     <input
       id="storeName"
       type="text"
@@ -144,6 +147,7 @@
     >
 
     <label>Суроға</label>
+
     <input
       id="storeAddress"
       type="text"
@@ -165,12 +169,17 @@
 </div>
 
 <script>
-  /*
-    ⚠️ ИН 2 ҚАТРРО БО МАЪЛУМОТИ SUPABASE-И ЛОИҲААТ ИВАЗ КУН.
-  */
 
-  const SUPABASE_URL = "ГУЗОР_URL-и_SUPABASE_РО_ИНҶО";
-  const SUPABASE_ANON_KEY = "ГУЗОР_ANON_KEY-и_SUPABASE_РО_ИНҶО";
+  /* ==============================
+     SUPABASE
+  ============================== */
+
+  const SUPABASE_URL =
+    "https://hyfcgiipstcuobjtnyvz.supabase.co";
+
+  const SUPABASE_ANON_KEY =
+    "sb_publishable_C6rL2SmXOXwU8ZzJoX4z0Q_1OvXGPFu";
+
 
   const supabaseClient = supabase.createClient(
     SUPABASE_URL,
@@ -178,30 +187,50 @@
   );
 
 
+  /* ==============================
+     CHECK DIRECTOR
+  ============================== */
+
   async function checkDirector() {
 
-    const loading = document.getElementById("loading");
-    const panel = document.getElementById("panel");
+    const loading =
+      document.getElementById("loading");
+
+    const panel =
+      document.getElementById("panel");
+
 
     const {
       data: { user },
       error
     } = await supabaseClient.auth.getUser();
 
+
     if (error || !user) {
+
       loading.innerHTML =
         "❌ Шумо ба аккаунт ворид нашудаед.";
+
       return;
     }
 
-    const { data: profile, error: profileError } =
+
+    const {
+      data: profile,
+      error: profileError
+    } =
       await supabaseClient
         .from("profiles")
         .select("role")
         .eq("id", user.id)
         .single();
 
-    if (profileError || !profile || profile.role !== "director") {
+
+    if (
+      profileError ||
+      !profile ||
+      profile.role !== "director"
+    ) {
 
       loading.innerHTML =
         "⛔ Дастрасӣ танҳо барои директор иҷозат аст.";
@@ -209,39 +238,58 @@
       return;
     }
 
+
     loading.classList.add("hidden");
+
     panel.classList.remove("hidden");
 
     loadStores();
   }
 
 
+  /* ==============================
+     ADD STORE
+  ============================== */
+
   async function addStore() {
 
     const name =
-      document.getElementById("storeName").value.trim();
+      document.getElementById("storeName")
+        .value.trim();
+
 
     const address =
-      document.getElementById("storeAddress").value.trim();
+      document.getElementById("storeAddress")
+        .value.trim();
+
 
     const message =
       document.getElementById("message");
 
+
     if (!name || !address) {
 
       message.className = "error";
+
       message.innerText =
         "⚠️ Номи мағоза ва суроға ҳатмист.";
 
       return;
     }
 
+
     message.className = "";
+
     message.style.display = "block";
-    message.innerText = "⏳ Илова шуда истодааст...";
+
+    message.innerText =
+      "⏳ Илова шуда истодааст...";
 
 
-    const { data, error } =
+    const {
+      data,
+      error
+    } =
       await supabaseClient
         .from("stores")
         .insert([
@@ -258,6 +306,7 @@
       console.error(error);
 
       message.className = "error";
+
       message.innerText =
         "❌ Хато: " + error.message;
 
@@ -266,30 +315,44 @@
 
 
     message.className = "success";
+
     message.innerText =
       "✅ Мағоза бомуваффақият илова шуд!";
 
+
     document.getElementById("storeName").value = "";
+
     document.getElementById("storeAddress").value = "";
+
 
     loadStores();
   }
 
+
+  /* ==============================
+     LOAD STORES
+  ============================== */
 
   async function loadStores() {
 
     const storesBox =
       document.getElementById("stores");
 
+
     storesBox.innerHTML =
       "⏳ Бор шуда истодааст...";
 
 
-    const { data, error } =
+    const {
+      data,
+      error
+    } =
       await supabaseClient
         .from("stores")
         .select("*")
-        .order("id", { ascending: false });
+        .order("id", {
+          ascending: false
+        });
 
 
     if (error) {
@@ -315,15 +378,25 @@
 
     data.forEach(store => {
 
-      const div = document.createElement("div");
+      const div =
+        document.createElement("div");
+
 
       div.className = "store";
 
+
       div.innerHTML = `
-        <strong>🏪 ${escapeHtml(store.name)}</strong>
+        <strong>
+          🏪 ${escapeHtml(store.name)}
+        </strong>
+
         <br><br>
-        📍 ${escapeHtml(store.address || "Суроға нест")}
+
+        📍 ${escapeHtml(
+          store.address || "Суроға нест"
+        )}
       `;
+
 
       storesBox.appendChild(div);
 
@@ -331,9 +404,14 @@
   }
 
 
+  /* ==============================
+     SECURITY
+  ============================== */
+
   function escapeHtml(text) {
 
-    const div = document.createElement("div");
+    const div =
+      document.createElement("div");
 
     div.textContent = text;
 
@@ -341,9 +419,13 @@
   }
 
 
+  /* ==============================
+     START
+  ============================== */
+
   checkDirector();
 
 </script>
 
 </body>
-</html>
+      </html>
