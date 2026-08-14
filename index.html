@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Панели директор</title>
+
+  <title>Go to Market — Панели директор</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -65,9 +66,13 @@
       outline: none;
     }
 
+    input:focus {
+      border-color: #2563eb;
+    }
+
     button {
       width: 100%;
-      margin-top: 20px;
+      margin-top: 15px;
       padding: 15px;
       border: 0;
       border-radius: 11px;
@@ -75,13 +80,24 @@
       color: white;
       font-size: 17px;
       font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(.98);
+    }
+
+    .gps-button {
+      background: #2563eb;
     }
 
     .logout {
       background: #dc2626;
     }
 
-    #message {
+    #message,
+    #loginMessage,
+    #gpsMessage {
       margin-top: 15px;
       padding: 12px;
       border-radius: 10px;
@@ -100,15 +116,40 @@
       color: #991b1b;
     }
 
+    .info {
+      display: block !important;
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
     .store {
       margin-top: 15px;
       padding: 15px;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
+      background: #fafafa;
+    }
+
+    .store strong {
+      font-size: 18px;
+    }
+
+    .coordinates {
+      margin-top: 10px;
+      padding: 10px;
+      background: #eef2ff;
+      border-radius: 8px;
+      font-size: 14px;
     }
 
     .hidden {
       display: none;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 8px;
     }
   </style>
 </head>
@@ -122,53 +163,93 @@
 <div class="container">
 
   <!-- LOGIN -->
+
   <div id="loginBox" class="card">
+
     <h2>🔐 Воридшавӣ</h2>
 
     <label>Email</label>
-    <input id="email" type="email" placeholder="Email-и шумо">
+
+    <input
+      id="email"
+      type="email"
+      placeholder="Email-и шумо"
+    >
 
     <label>Парол</label>
-    <input id="password" type="password" placeholder="Парол">
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Парол"
+    >
 
     <button onclick="login()">
       🔑 Ворид шудан
     </button>
 
     <div id="loginMessage"></div>
+
   </div>
 
 
   <!-- DIRECTOR PANEL -->
+
   <div id="panel" class="card hidden">
 
     <h2>➕ Илова кардани мағоза</h2>
 
     <label>Номи мағоза</label>
+
     <input
       id="storeName"
       type="text"
       placeholder="Масалан: Мағозаи Хуроквории Ворис"
     >
 
+
     <label>Суроға</label>
+
     <input
       id="storeAddress"
       type="text"
-      placeholder="Масалан: 46 мкр, пушти бозор"
+      placeholder="Масалан: 46 мкр, пушти Содот"
     >
+
+
+    <button
+      class="gps-button"
+      onclick="getLocation()"
+    >
+      📍 Гирифтани ҷойгиршавии ман
+    </button>
+
+    <div id="gpsMessage"></div>
+
+    <div class="small">
+      Барои гирифтани GPS иҷозати Location-ро диҳед.
+    </div>
+
 
     <button onclick="addStore()">
       ➕ Илова кардани мағоза
     </button>
 
+
     <div id="message"></div>
 
-    <h2 style="margin-top:30px;">🏪 Мағозаҳо</h2>
+
+    <h2 style="margin-top:30px;">
+      🏪 Мағозаҳо
+    </h2>
 
     <div id="stores"></div>
 
-    <button class="logout" onclick="logout()">
+
+    <button
+      class="logout"
+      onclick="logout()"
+    >
       🚪 Баромадан
     </button>
 
@@ -179,6 +260,10 @@
 
 <script>
 
+/* =========================================
+   SUPABASE
+========================================= */
+
 const SUPABASE_URL =
   "https://hyfcgiipstcuobjtnyvz.supabase.co";
 
@@ -186,48 +271,73 @@ const SUPABASE_ANON_KEY =
   "sb_publishable_C6rL2SmXOXwU8ZzJoX4z0Q_1OvXGPFu";
 
 
-const supabaseClient = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+const supabaseClient =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
 
 
-// LOGIN
+/* =========================================
+   GPS VARIABLES
+========================================= */
+
+let currentLatitude = null;
+let currentLongitude = null;
+
+
+/* =========================================
+   LOGIN
+========================================= */
+
 async function login() {
 
   const email =
-    document.getElementById("email").value.trim();
+    document.getElementById("email")
+      .value.trim();
 
   const password =
-    document.getElementById("password").value;
+    document.getElementById("password")
+      .value;
 
   const msg =
     document.getElementById("loginMessage");
 
+
   if (!email || !password) {
 
     msg.className = "error";
+
     msg.innerText =
       "⚠️ Email ва паролро ворид кунед.";
 
     return;
   }
 
+
   msg.className = "";
+
   msg.style.display = "block";
-  msg.innerText = "⏳ Ворид шуда истодааст...";
+
+  msg.innerText =
+    "⏳ Ворид шуда истодааст...";
 
 
-  const { data, error } =
-    await supabaseClient.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth
+      .signInWithPassword({
+        email: email,
+        password: password
+      });
 
 
   if (error) {
 
     msg.className = "error";
+
     msg.innerText =
       "❌ " + error.message;
 
@@ -236,27 +346,38 @@ async function login() {
 
 
   msg.className = "success";
+
   msg.innerText =
     "✅ Ворид шудед.";
+
 
   checkDirector();
 }
 
 
-// CHECK DIRECTOR
+/* =========================================
+   CHECK DIRECTOR
+========================================= */
+
 async function checkDirector() {
 
   const {
     data: { user }
-  } = await supabaseClient.auth.getUser();
+  } =
+    await supabaseClient.auth
+      .getUser();
 
 
   if (!user) {
+
     return;
   }
 
 
-  const { data: profile, error } =
+  const {
+    data: profile,
+    error
+  } =
     await supabaseClient
       .from("profiles")
       .select("role")
@@ -266,9 +387,12 @@ async function checkDirector() {
 
   if (error || !profile) {
 
-    document.getElementById("loginMessage").className = "error";
+    const msg =
+      document.getElementById("loginMessage");
 
-    document.getElementById("loginMessage").innerText =
+    msg.className = "error";
+
+    msg.innerText =
       "⛔ Барои ин аккаунт профили director сохта нашудааст.";
 
     return;
@@ -277,9 +401,12 @@ async function checkDirector() {
 
   if (profile.role !== "director") {
 
-    document.getElementById("loginMessage").className = "error";
+    const msg =
+      document.getElementById("loginMessage");
 
-    document.getElementById("loginMessage").innerText =
+    msg.className = "error";
+
+    msg.innerText =
       "⛔ Ин аккаунт директор нест.";
 
     await supabaseClient.auth.signOut();
@@ -288,24 +415,123 @@ async function checkDirector() {
   }
 
 
-  document.getElementById("loginBox")
+  document
+    .getElementById("loginBox")
     .classList.add("hidden");
 
-  document.getElementById("panel")
+
+  document
+    .getElementById("panel")
     .classList.remove("hidden");
+
 
   loadStores();
 }
 
 
-// ADD STORE
+/* =========================================
+   GET GPS LOCATION
+========================================= */
+
+function getLocation() {
+
+  const gpsMessage =
+    document.getElementById("gpsMessage");
+
+
+  if (!navigator.geolocation) {
+
+    gpsMessage.className = "error";
+
+    gpsMessage.innerText =
+      "❌ GPS дар ин браузер дастгирӣ намешавад.";
+
+    return;
+  }
+
+
+  gpsMessage.className = "info";
+
+  gpsMessage.innerText =
+    "📍 Ҷойгиршавӣ муайян шуда истодааст...";
+
+
+  navigator.geolocation.getCurrentPosition(
+
+    function(position) {
+
+      currentLatitude =
+        position.coords.latitude;
+
+      currentLongitude =
+        position.coords.longitude;
+
+
+      gpsMessage.className = "success";
+
+      gpsMessage.innerText =
+        "✅ GPS гирифта шуд.\n" +
+        "Latitude: " +
+        currentLatitude.toFixed(6) +
+        "\nLongitude: " +
+        currentLongitude.toFixed(6);
+
+    },
+
+
+    function(error) {
+
+      currentLatitude = null;
+
+      currentLongitude = null;
+
+
+      gpsMessage.className = "error";
+
+
+      if (error.code === 1) {
+
+        gpsMessage.innerText =
+          "❌ Иҷозаи GPS дода нашуд. Location-ро фаъол кунед.";
+
+      } else if (error.code === 2) {
+
+        gpsMessage.innerText =
+          "❌ Ҷойгиршавӣ муайян карда нашуд.";
+
+      } else {
+
+        gpsMessage.innerText =
+          "❌ Хатогӣ ҳангоми гирифтани GPS.";
+
+      }
+
+    },
+
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+
+  );
+}
+
+
+/* =========================================
+   ADD STORE
+========================================= */
+
 async function addStore() {
 
   const name =
-    document.getElementById("storeName").value.trim();
+    document.getElementById("storeName")
+      .value.trim();
 
   const address =
-    document.getElementById("storeAddress").value.trim();
+    document.getElementById("storeAddress")
+      .value.trim();
 
   const message =
     document.getElementById("message");
@@ -322,26 +548,46 @@ async function addStore() {
   }
 
 
+  if (
+    currentLatitude === null ||
+    currentLongitude === null
+  ) {
+
+    message.className = "error";
+
+    message.innerText =
+      "⚠️ Аввал тугмаи «📍 Гирифтани ҷойгиршавии ман»-ро пахш кунед.";
+
+    return;
+  }
+
+
   message.className = "";
 
   message.style.display = "block";
 
   message.innerText =
-    "⏳ Илова шуда истодааст...";
+    "⏳ Мағоза илова шуда истодааст...";
 
 
-  const { error } =
+  const {
+    error
+  } =
     await supabaseClient
       .from("stores")
       .insert([
         {
           name: name,
-          address: address
+          address: address,
+          latitude: currentLatitude,
+          longitude: currentLongitude
         }
       ]);
 
 
   if (error) {
+
+    console.error(error);
 
     message.className = "error";
 
@@ -355,33 +601,62 @@ async function addStore() {
   message.className = "success";
 
   message.innerText =
-    "✅ Мағоза бомуваффақият илова шуд!";
+    "✅ Мағоза бо GPS бомуваффақият илова шуд!";
 
 
-  document.getElementById("storeName").value = "";
+  document
+    .getElementById("storeName")
+    .value = "";
 
-  document.getElementById("storeAddress").value = "";
+
+  document
+    .getElementById("storeAddress")
+    .value = "";
+
+
+  currentLatitude = null;
+
+  currentLongitude = null;
+
+
+  document
+    .getElementById("gpsMessage")
+    .className = "";
+
+
+  document
+    .getElementById("gpsMessage")
+    .style.display = "none";
 
 
   loadStores();
 }
 
 
-// LOAD STORES
+/* =========================================
+   LOAD STORES
+========================================= */
+
 async function loadStores() {
 
   const storesBox =
     document.getElementById("stores");
 
+
   storesBox.innerHTML =
     "⏳ Бор шуда истодааст...";
 
 
-  const { data, error } =
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("stores")
       .select("*")
-      .order("id", { ascending: false });
+      .order("id", {
+        ascending: false
+      });
 
 
   if (error) {
@@ -410,13 +685,59 @@ async function loadStores() {
     const div =
       document.createElement("div");
 
+
     div.className = "store";
 
+
+    let gpsHtml = "";
+
+
+    if (
+      store.latitude !== null &&
+      store.longitude !== null
+    ) {
+
+      const mapUrl =
+        "https://www.google.com/maps/search/?api=1&query=" +
+        store.latitude +
+        "," +
+        store.longitude;
+
+
+      gpsHtml = `
+        <div class="coordinates">
+          📍 GPS:<br>
+          ${Number(store.latitude).toFixed(6)},
+          ${Number(store.longitude).toFixed(6)}
+
+          <br>
+
+          <a
+            href="${mapUrl}"
+            target="_blank"
+            rel="noopener"
+          >
+            🗺️ Кушодан дар Google Maps
+          </a>
+        </div>
+      `;
+    }
+
+
     div.innerHTML = `
-      <strong>🏪 ${escapeHtml(store.name)}</strong>
+      <strong>
+        🏪 ${escapeHtml(store.name)}
+      </strong>
+
       <br><br>
-      📍 ${escapeHtml(store.address || "Суроға нест")}
+
+      📍 ${escapeHtml(
+        store.address || "Суроға нест"
+      )}
+
+      ${gpsHtml}
     `;
+
 
     storesBox.appendChild(div);
 
@@ -424,7 +745,10 @@ async function loadStores() {
 }
 
 
-// ESCAPE HTML
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
 function escapeHtml(text) {
 
   const div =
@@ -436,7 +760,10 @@ function escapeHtml(text) {
 }
 
 
-// LOGOUT
+/* =========================================
+   LOGOUT
+========================================= */
+
 async function logout() {
 
   await supabaseClient.auth.signOut();
@@ -445,10 +772,13 @@ async function logout() {
 }
 
 
-// CHECK SESSION
+/* =========================================
+   START
+========================================= */
+
 checkDirector();
 
 </script>
 
 </body>
-  </html>
+    </html>
