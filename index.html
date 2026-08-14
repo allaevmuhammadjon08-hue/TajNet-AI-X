@@ -1,347 +1,21 @@
-<!DOCTYPE html>
-<html lang="tg">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+function getLocation() {
 
-  <title>Панели директор</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      margin: 0;
-      background: #f4f6f8;
-      color: #222;
-    }
-
-    .header {
-      background: #111827;
-      color: white;
-      padding: 22px 18px;
-      text-align: center;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 25px;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 25px auto;
-      padding: 15px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 4px 18px rgba(0,0,0,.08);
-    }
-
-    h2 {
-      margin-top: 0;
-    }
-
-    label {
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 7px;
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-      padding: 15px;
-      border: 1px solid #d1d5db;
-      border-radius: 11px;
-      font-size: 16px;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #2563eb;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 18px;
-      padding: 15px;
-      border: 0;
-      border-radius: 11px;
-      background: #16a34a;
-      color: white;
-      font-size: 17px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:active {
-      transform: scale(.98);
-    }
-
-    .gps {
-      background: #2563eb;
-    }
-
-    .logout {
-      background: #dc2626;
-    }
-
-    #message {
-      margin-top: 15px;
-      padding: 13px;
-      border-radius: 10px;
-      display: none;
-      line-height: 1.5;
-    }
-
-    .success {
-      display: block !important;
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .error {
-      display: block !important;
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .info {
-      display: block !important;
-      background: #dbeafe;
-      color: #1e40af;
-    }
-
-    .store {
-      margin-top: 15px;
-      padding: 17px;
-      border: 1px solid #e5e7eb;
-      border-radius: 13px;
-      background: #fff;
-    }
-
-    .store strong {
-      font-size: 18px;
-    }
-
-    .coordinates {
-      margin-top: 10px;
-      color: #555;
-      font-size: 14px;
-    }
-
-    .map {
-      display: block;
-      margin-top: 12px;
-      text-decoration: none;
-      text-align: center;
-      background: #111827;
-      color: white;
-      padding: 11px;
-      border-radius: 9px;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .gps-status {
-      margin-top: 12px;
-      padding: 11px;
-      border-radius: 9px;
-      background: #f3f4f6;
-      font-size: 14px;
-    }
-
-    .login-card {
-      margin-top: 30px;
-    }
-  </style>
-</head>
-
-<body>
-
-<div class="header">
-  <h1>👨‍💼 Панели директор</h1>
-</div>
-
-<div class="container">
-
-  <!-- Санҷиш -->
-  <div id="loading" class="card">
-    ⏳ Санҷиши иҷозат...
-  </div>
-
-  <!-- Панели директор -->
-  <div id="panel" class="card hidden">
-
-    <h2>➕ Илова кардани мағоза</h2>
-
-    <label>Номи мағоза</label>
-
-    <input
-      id="storeName"
-      type="text"
-      placeholder="Масалан: Мағозаи Хуроквории Ворис"
-    >
-
-    <label>Суроға</label>
-
-    <input
-      id="storeAddress"
-      type="text"
-      placeholder="Масалан: 46 мкр, пушти Содот"
-    >
-
-    <button class="gps" onclick="getLocation()">
-      📍 Гирифтани ҷойгиршавии ман
-    </button>
-
-    <div id="gpsStatus" class="gps-status">
-      📍 Ҷойгиршавӣ ҳоло гирифта нашудааст.
-    </div>
-
-    <button onclick="addStore()">
-      ➕ Илова кардани мағоза
-    </button>
-
-    <div id="message"></div>
-
-    <h2 style="margin-top:30px;">
-      🏪 Мағозаҳо
-    </h2>
-
-    <div id="stores">
-      ⏳ Бор шуда истодааст...
-    </div>
-
-    <button class="logout" onclick="logout()">
-      🚪 Баромадан
-    </button>
-
-  </div>
-
-</div>
-
-
-<script>
-
-  /* ==============================
-     SUPABASE
-  ============================== */
-
-  const SUPABASE_URL =
-    "https://hyfcgiipstcuobjtnyvz.supabase.co";
-
-  const SUPABASE_ANON_KEY =
-    "sb_publishable_C6rL2SmXOXwU8ZzJoX4z0Q_1OvXGPFu";
-
-
-  const supabaseClient =
-    supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
-
-
-  /* ==============================
-     GPS VARIABLES
-  ============================== */
-
-  let currentLatitude = null;
-  let currentLongitude = null;
-
-
-  /* ==============================
-     CHECK DIRECTOR
-  ============================== */
-
-  async function checkDirector() {
-
-    const loading =
-      document.getElementById("loading");
-
-    const panel =
-      document.getElementById("panel");
-
-
-    const {
-      data: { user },
-      error
-    } = await supabaseClient.auth.getUser();
-
-
-    if (error || !user) {
-
-      loading.innerHTML =
-        "❌ Шумо ба аккаунт ворид нашудаед.";
-
-      return;
-    }
-
-
-    const {
-      data: profile,
-      error: profileError
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
-
-
-    if (
-      profileError ||
-      !profile ||
-      profile.role !== "director"
-    ) {
-
-      loading.innerHTML =
-        "⛔ Ин аккаунт директор нест.";
-
-      return;
-    }
-
-
-    loading.classList.add("hidden");
-
-    panel.classList.remove("hidden");
-
-    loadStores();
-  }
-
-
-  /* ==============================
-     GET GPS LOCATION
-  ============================== */
-
-  function getLocation() {
+  return new Promise((resolve, reject) => {
 
     const gpsStatus =
       document.getElementById("gpsStatus");
 
-
     if (!navigator.geolocation) {
 
       gpsStatus.innerHTML =
-        "❌ Браузер GPS-ро дастгирӣ намекунад.";
+        "❌ Телефон ё браузер GPS-ро дастгирӣ намекунад.";
 
+      reject(new Error("Geolocation not supported"));
       return;
     }
 
-
     gpsStatus.innerHTML =
-      "⏳ Ҷойгиршавии шумо гирифта шуда истодааст...";
-
+      "⏳ GPS-и телефон гирифта шуда истодааст...";
 
     navigator.geolocation.getCurrentPosition(
 
@@ -353,7 +27,6 @@
         currentLongitude =
           position.coords.longitude;
 
-
         gpsStatus.innerHTML =
           "✅ Ҷойгиршавӣ гирифта шуд.<br>" +
           "Latitude: " +
@@ -361,388 +34,47 @@
           "<br>" +
           "Longitude: " +
           currentLongitude.toFixed(6);
-      },
 
+        resolve({
+          latitude: currentLatitude,
+          longitude: currentLongitude
+        });
+      },
 
       function(error) {
 
         currentLatitude = null;
         currentLongitude = null;
 
-
-        let text =
-          "❌ Ҷойгиршавиро гирифтан натавонистем.";
-
+        let text = "❌ GPS гирифта нашуд.";
 
         if (error.code === 1) {
-
           text =
-            "❌ Иҷозаи GPS дода нашудааст.<br>" +
-            "Дар браузер иҷозаи Location-ро фаъол кунед.";
+            "❌ Иҷозаи Location рад шудааст. " +
+            "Барои сайт Location-ро иҷозат деҳ.";
         }
-
 
         if (error.code === 2) {
-
           text =
-            "❌ Ҷойгиршавӣ дастрас нест.<br>" +
-            "GPS ва Location-и телефонро фаъол кунед.";
+            "❌ Ҷойгиршавӣ дастрас нест. " +
+            "GPS/Location-и телефонро фаъол кун.";
         }
-
 
         if (error.code === 3) {
-
           text =
-            "❌ Вақти гирифтани GPS тамом шуд.<br>" +
-            "Боз кӯшиш кунед.";
+            "❌ GPS вақт гирифт. Боз кӯшиш кун.";
         }
 
-
         gpsStatus.innerHTML = text;
-      },
 
+        reject(error);
+      },
 
       {
         enableHighAccuracy: true,
-        timeout: 15000,
+        timeout: 30000,
         maximumAge: 0
       }
-
     );
-  }
-
-
-  /* ==============================
-     ADD STORE
-  ============================== */
-
-  async function addStore() {
-
-    const name =
-      document
-        .getElementById("storeName")
-        .value
-        .trim();
-
-
-    const address =
-      document
-        .getElementById("storeAddress")
-        .value
-        .trim();
-
-
-    const message =
-      document.getElementById("message");
-
-
-    /* Ном ва суроға */
-
-    if (!name || !address) {
-
-      message.className = "error";
-
-      message.innerText =
-        "⚠️ Номи мағоза ва суроға ҳатмист.";
-
-      return;
-    }
-
-
-    /* Агар GPS ҳоло гирифта нашуда бошад,
-       автоматӣ GPS мегирем */
-
-    if (
-      currentLatitude === null ||
-      currentLongitude === null
-    ) {
-
-      message.className = "info";
-
-      message.innerText =
-        "📍 Аввал ҷойгиршавии телефон гирифта мешавад...";
-
-
-      await getLocation();
-
-
-      /*
-        Каме интизор мешавем,
-        то GPS натиҷа диҳад.
-      */
-
-      await new Promise(
-        resolve => setTimeout(resolve, 500)
-      );
-
-
-      if (
-        currentLatitude === null ||
-        currentLongitude === null
-      ) {
-
-        message.className = "error";
-
-        message.innerText =
-          "❌ GPS гирифта нашуд. " +
-          "Иҷозаи Location-ро фаъол карда, " +
-          "дубора кӯшиш кунед.";
-
-        return;
-      }
-    }
-
-
-    message.className = "info";
-
-    message.innerText =
-      "⏳ Мағоза илова шуда истодааст...";
-
-
-    /* ==============================
-       INSERT INTO SUPABASE
-    ============================== */
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("stores")
-        .insert([
-          {
-            name: name,
-            address: address,
-
-            latitude:
-              currentLatitude,
-
-            longitude:
-              currentLongitude
-          }
-        ])
-        .select();
-
-
-    /* Хато */
-
-    if (error) {
-
-      console.error(error);
-
-      message.className = "error";
-
-      message.innerText =
-        "❌ Хато: " +
-        error.message;
-
-      return;
-    }
-
-
-    /* Муваффақият */
-
-    message.className = "success";
-
-    message.innerText =
-      "✅ Мағоза бомуваффақият илова шуд!";
-
-
-    document
-      .getElementById("storeName")
-      .value = "";
-
-
-    document
-      .getElementById("storeAddress")
-      .value = "";
-
-
-    /* GPS-и нав барои мағозаи дигар */
-
-    currentLatitude = null;
-    currentLongitude = null;
-
-
-    document
-      .getElementById("gpsStatus")
-      .innerHTML =
-        "📍 Ҷойгиршавӣ барои мағозаи нав гирифта нашудааст.";
-
-
-    loadStores();
-  }
-
-
-  /* ==============================
-     LOAD STORES
-  ============================== */
-
-  async function loadStores() {
-
-    const storesBox =
-      document.getElementById("stores");
-
-
-    storesBox.innerHTML =
-      "⏳ Бор шуда истодааст...";
-
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .from("stores")
-        .select("*")
-        .order("id", {
-          ascending: false
-        });
-
-
-    if (error) {
-
-      storesBox.innerHTML =
-        "❌ " + error.message;
-
-      return;
-    }
-
-
-    if (!data || data.length === 0) {
-
-      storesBox.innerHTML =
-        "Ҳоло ягон мағоза нест.";
-
-      return;
-    }
-
-
-    storesBox.innerHTML = "";
-
-
-    data.forEach(store => {
-
-      const div =
-        document.createElement("div");
-
-
-      div.className = "store";
-
-
-      const name =
-        escapeHtml(
-          store.name || "Мағоза"
-        );
-
-
-      const address =
-        escapeHtml(
-          store.address || "Суроға нест"
-        );
-
-
-      let coordinates = "";
-
-
-      let mapButton = "";
-
-
-      if (
-        store.latitude !== null &&
-        store.longitude !== null
-      ) {
-
-        const lat =
-          Number(store.latitude);
-
-
-        const lon =
-          Number(store.longitude);
-
-
-        coordinates =
-          `
-          <div class="coordinates">
-            📍 Latitude: ${lat.toFixed(6)}<br>
-            📍 Longitude: ${lon.toFixed(6)}
-          </div>
-          `;
-
-
-        mapButton =
-          `
-          <a
-            class="map"
-            target="_blank"
-            href="https://www.google.com/maps?q=${lat},${lon}"
-          >
-            🗺️ Кушодан дар Google Maps
-          </a>
-          `;
-      }
-
-
-      div.innerHTML = `
-
-        <strong>
-          🏪 ${name}
-        </strong>
-
-        <br><br>
-
-        📍 ${address}
-
-        ${coordinates}
-
-        ${mapButton}
-
-      `;
-
-
-      storesBox.appendChild(div);
-
-    });
-
-  }
-
-
-  /* ==============================
-     LOGOUT
-  ============================== */
-
-  async function logout() {
-
-    await supabaseClient.auth.signOut();
-
-    window.location.reload();
-  }
-
-
-  /* ==============================
-     ESCAPE HTML
-  ============================== */
-
-  function escapeHtml(text) {
-
-    const div =
-      document.createElement("div");
-
-
-    div.textContent = text;
-
-
-    return div.innerHTML;
-  }
-
-
-  /* ==============================
-     START
-  ============================== */
-
-  checkDirector();
-
-</script>
-
-</body>
-  </html>
+  });
+}
