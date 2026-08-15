@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Go to Market</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -19,1221 +18,1075 @@
     body {
       min-height: 100vh;
       background:
-        radial-gradient(circle at top left, #2563eb 0, transparent 35%),
-        radial-gradient(circle at bottom right, #16a34a 0, transparent 35%),
-        #07111f;
-      color: #111827;
+        radial-gradient(circle at top left, #2563eb, transparent 35%),
+        linear-gradient(135deg, #020617, #0f172a);
+      color: #fff;
     }
 
-    button,
+    .app {
+      max-width: 520px;
+      min-height: 100vh;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .logo {
+      text-align: center;
+      padding: 55px 10px 25px;
+    }
+
+    .logo-icon {
+      width: 82px;
+      height: 82px;
+      margin: auto;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      background: linear-gradient(135deg, #2563eb, #22c55e);
+      box-shadow: 0 15px 45px rgba(37,99,235,.4);
+    }
+
+    .logo h1 {
+      margin-top: 17px;
+      font-size: 31px;
+    }
+
+    .logo p {
+      margin-top: 8px;
+      color: #94a3b8;
+    }
+
+    .card {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(18px);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.28);
+    }
+
+    .card h2 {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 8px;
+      color: #cbd5e1;
+      font-weight: bold;
+    }
+
     input {
-      font: inherit;
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #334155;
+      border-radius: 13px;
+      outline: none;
+      background: #0f172a;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    input:focus {
+      border-color: #3b82f6;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 13px;
+      padding: 15px;
+      margin-top: 20px;
+      background: linear-gradient(135deg, #2563eb, #16a34a);
+      color: #fff;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 12px;
+      line-height: 1.5;
+    }
+
+    .error {
+      display: block;
+      background: rgba(239,68,68,.15);
+      color: #fca5a5;
+    }
+
+    .success {
+      display: block;
+      background: rgba(34,197,94,.15);
+      color: #86efac;
     }
 
     .hidden {
       display: none !important;
     }
 
-    /* =========================
-       LOGIN
-    ========================= */
-
-    #loginPage {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .login-card {
-      width: 100%;
-      max-width: 430px;
-      padding: 32px 25px;
-      border-radius: 28px;
-      background: rgba(255,255,255,.96);
-      box-shadow: 0 25px 70px rgba(0,0,0,.35);
-    }
-
-    .logo {
-      width: 76px;
-      height: 76px;
-      margin: 0 auto 18px;
-      border-radius: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg,#2563eb,#16a34a);
-      color: white;
-      font-size: 36px;
-      box-shadow: 0 12px 30px rgba(37,99,235,.35);
-    }
-
-    .login-title {
+    .welcome {
       text-align: center;
-      font-size: 29px;
-      font-weight: 800;
-      color: #111827;
+      margin: 30px 0 20px;
     }
 
-    .login-subtitle {
-      text-align: center;
-      color: #6b7280;
-      margin-top: 8px;
-      margin-bottom: 25px;
+    .role-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
     }
 
-    .field {
-      margin-top: 17px;
+    .welcome h2 {
+      font-size: 25px;
     }
 
-    .field label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 700;
-      color: #374151;
+    .welcome p {
+      color: #94a3b8;
+      margin-top: 7px;
     }
 
-    .field input {
-      width: 100%;
-      height: 52px;
-      border: 1px solid #d1d5db;
-      border-radius: 14px;
-      padding: 0 15px;
-      outline: none;
-      background: #f9fafb;
-      transition: .2s;
-    }
-
-    .field input:focus {
-      border-color: #2563eb;
-      background: white;
-      box-shadow: 0 0 0 4px rgba(37,99,235,.10);
-    }
-
-    .login-btn {
-      width: 100%;
-      height: 54px;
-      margin-top: 23px;
-      border: 0;
-      border-radius: 15px;
-      background: linear-gradient(135deg,#2563eb,#16a34a);
-      color: white;
-      font-weight: 800;
-      font-size: 17px;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(37,99,235,.25);
-    }
-
-    .login-btn:active {
-      transform: scale(.98);
-    }
-
-    .message {
-      margin-top: 15px;
-      padding: 13px;
-      border-radius: 13px;
-      display: none;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .message.show {
-      display: block;
-    }
-
-    .message.error {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .message.success {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .message.info {
-      background: #dbeafe;
-      color: #1e40af;
-    }
-
-    /* =========================
-       APP
-    ========================= */
-
-    #app {
-      min-height: 100vh;
-      background: #f3f6fa;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      color: white;
-      padding: 17px;
-      background: linear-gradient(135deg,#111827,#1e3a8a);
-      box-shadow: 0 5px 25px rgba(0,0,0,.15);
-    }
-
-    .topbar-inner {
-      max-width: 1000px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-    }
-
-    .brand-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,.14);
-      font-size: 23px;
-    }
-
-    .brand-name {
-      font-size: 20px;
-      font-weight: 800;
-    }
-
-    .role-badge {
-      margin-top: 3px;
-      font-size: 12px;
-      opacity: .8;
-    }
-
-    .logout-btn {
-      border: 0;
-      border-radius: 12px;
-      padding: 11px 14px;
-      background: rgba(255,255,255,.13);
-      color: white;
-      cursor: pointer;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1000px;
-      margin: auto;
-      padding: 20px;
-    }
-
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(2,1fr);
-      gap: 18px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 22px;
-      padding: 21px;
-      box-shadow: 0 6px 25px rgba(15,23,42,.07);
-      border: 1px solid #edf0f4;
-    }
-
-    .card.full {
-      grid-column: 1 / -1;
-    }
-
-    .card-title {
-      font-size: 19px;
-      font-weight: 800;
-      margin-bottom: 15px;
-      color: #111827;
-    }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 12px;
-    }
-
-    .stat {
-      padding: 17px;
+    .info {
+      background: rgba(255,255,255,.06);
       border-radius: 16px;
-      background: #f8fafc;
-      text-align: center;
+      padding: 16px;
+      margin-bottom: 12px;
     }
 
-    .stat-icon {
-      font-size: 24px;
-    }
-
-    .stat-number {
-      font-size: 23px;
-      font-weight: 800;
-      margin-top: 5px;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: #6b7280;
-      margin-top: 3px;
-    }
-
-    .item {
-      padding: 15px;
-      border: 1px solid #e5e7eb;
-      border-radius: 15px;
-      margin-top: 10px;
-      background: #fafafa;
-    }
-
-    .item-title {
-      font-weight: 800;
-      color: #111827;
-    }
-
-    .item-info {
-      color: #6b7280;
-      font-size: 14px;
-      margin-top: 6px;
-      line-height: 1.6;
-    }
-
-    .green {
-      color: #15803d;
-    }
-
-    .blue {
-      color: #1d4ed8;
-    }
-
-    .orange {
-      color: #c2410c;
-    }
-
-    .danger {
-      color: #b91c1c;
-    }
-
-    .action-btn {
-      width: 100%;
-      border: 0;
-      border-radius: 14px;
-      padding: 14px;
-      margin-top: 12px;
-      color: white;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .start {
-      background: linear-gradient(135deg,#16a34a,#15803d);
-    }
-
-    .finish {
-      background: linear-gradient(135deg,#dc2626,#991b1b);
-    }
-
-    .gps-box {
-      display: grid;
-      grid-template-columns: repeat(2,1fr);
-      gap: 12px;
-    }
-
-    .gps-value {
-      padding: 15px;
-      border-radius: 15px;
-      background: #f8fafc;
-    }
-
-    .gps-value small {
-      display: block;
-      color: #6b7280;
+    .info-title {
+      color: #94a3b8;
+      font-size: 13px;
       margin-bottom: 5px;
     }
 
-    .gps-value strong {
-      font-size: 16px;
+    .info-value {
+      font-size: 18px;
+      font-weight: bold;
     }
 
-    .loading {
-      text-align: center;
-      padding: 20px;
-      color: #6b7280;
+    .panel {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(37,99,235,.12);
+      border: 1px solid rgba(59,130,246,.2);
     }
 
-    @media(max-width:700px) {
+    .panel h3 {
+      margin-bottom: 8px;
+    }
 
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
+    .panel p {
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
 
-      .card.full {
-        grid-column: auto;
-      }
-
-      .stat-grid {
-        grid-template-columns: 1fr 1fr 1fr;
-      }
-
-      .container {
-        padding: 13px;
-      }
-
-      .topbar {
-        padding: 13px;
-      }
-
-      .brand-name {
-        font-size: 17px;
-      }
-
-      .logout-btn {
-        padding: 9px 11px;
-      }
+    .logout {
+      background: #dc2626;
     }
   </style>
 </head>
 
 <body>
 
-<!-- =========================
-     LOGIN
-========================= -->
+<div class="app">
 
-<section id="loginPage">
+  <!-- LOGIN -->
 
-  <div class="login-card">
+  <div id="loginPage">
 
     <div class="logo">
-      🛒
+      <div class="logo-icon">🛒</div>
+      <h1>Go to Market</h1>
+      <p>Системаи идоракунии мағозаҳо</p>
     </div>
 
-    <div class="login-title">
-      Go to Market
-    </div>
+    <div class="card">
 
-    <div class="login-subtitle">
-      Ба система ворид шавед
-    </div>
+      <h2>🔐 Воридшавӣ</h2>
 
-    <div class="field">
-
-      <label>Login</label>
+      <label for="login">Login</label>
 
       <input
         id="login"
         type="text"
         autocomplete="username"
-        autocapitalize="none"
-        spellcheck="false"
+        placeholder="Login"
       >
 
-    </div>
-
-    <div class="field">
-
-      <label>Парол</label>
+      <label for="password">Парол</label>
 
       <input
         id="password"
         type="password"
         autocomplete="current-password"
+        placeholder="Парол"
       >
+
+      <button id="loginButton">
+        🔑 Ворид шудан
+      </button>
+
+      <div id="loginMessage" class="message"></div>
 
     </div>
 
-    <button
-      class="login-btn"
-      onclick="login()"
-    >
-      🔐 Ворид шудан
-    </button>
-
-    <div
-      id="loginMessage"
-      class="message"
-    ></div>
-
   </div>
 
-</section>
+
+  <!-- DASHBOARD -->
+
+  <div id="dashboardPage" class="hidden">
+
+    <div class="welcome">
+
+      <div id="roleIcon" class="role-icon">👤</div>
+
+      <h2 id="welcomeTitle">Хуш омадед</h2>
+
+      <p id="welcomeText">Go to Market</p>
+
+    </div>
 
 
-<!-- =========================
-     APPLICATION
-========================= -->
+    <div class="card">
 
-<section
-  id="app"
-  class="hidden"
->
-
-  <header class="topbar">
-
-    <div class="topbar-inner">
-
-      <div class="brand">
-
-        <div class="brand-icon">
-          🛒
-        </div>
-
-        <div>
-
-          <div class="brand-name">
-            Go to Market
-          </div>
-
-          <div
-            id="roleText"
-            class="role-badge"
-          >
-          </div>
-
-        </div>
-
+      <div class="info">
+        <div class="info-title">Ҳисоб</div>
+        <div id="accountName" class="info-value">—</div>
       </div>
 
-      <button
-        class="logout-btn"
-        onclick="logout()"
-      >
+      <div class="info">
+        <div class="info-title">Нақш</div>
+        <div id="accountRole" class="info-value">—</div>
+      </div>
+
+      <div id="typeBox" class="info hidden">
+        <div class="info-title">Намуди ҳисоб</div>
+        <div id="accountType" class="info-value">—</div>
+      </div>
+
+      <div id="sectorBox" class="info hidden">
+        <div class="info-title">Сектор</div>
+        <div id="sectorName" class="info-value">—</div>
+      </div>
+
+      <div id="regionBox" class="info hidden">
+        <div class="info-title">Регион</div>
+        <div id="regionName" class="info-value">—</div>
+      </div>
+
+
+      <!-- DIRECTOR -->
+
+      <div id="directorPanel" class="panel hidden">
+        <h3>👑 Панели Director</h3>
+        <p>
+          Назорати умумии система, Supervisor,
+          Zayavshik, мағозаҳо ва ҳаракати коргарон.
+        </p>
+      </div>
+
+
+      <!-- SUPERVISOR -->
+
+      <div id="supervisorPanel" class="panel hidden">
+        <h3>👨‍💼 Панели Supervisor</h3>
+        <p>
+          Назорати Zayavshik, маршрутҳо,
+          вақт, масофа ва location.
+        </p>
+      </div>
+
+
+      <!-- SECTOR -->
+
+      <div id="sectorPanel" class="panel hidden">
+        <h3>📍 Панели Sector</h3>
+        <p>
+          Шумо ҳамчун Zayavshik-и Sector ворид шудед.
+          Мағозаҳои Sector ва маршрутҳои шумо нишон дода мешаванд.
+        </p>
+      </div>
+
+
+      <!-- REGION -->
+
+      <div id="regionPanel" class="panel hidden">
+        <h3>🌍 Панели Region</h3>
+        <p>
+          Шумо ҳамчун Zayavshik-и Region ворид шудед.
+          Мағозаҳои Region ва маршрутҳои шумо нишон дода мешаванд.
+        </p>
+      </div>
+
+
+      <button id="logoutButton" class="logout">
         🚪 Баромадан
       </button>
 
     </div>
 
-  </header>
+  </div>
 
-
-  <main class="container">
-
-
-    <!-- =========================
-         DIRECTOR
-    ========================= -->
-
-    <div
-      id="directorPage"
-      class="hidden"
-    >
-
-      <div class="dashboard-grid">
-
-        <div class="card full">
-
-          <div class="card-title">
-            👨‍💼 Панели директор
-          </div>
-
-          <div class="stat-grid">
-
-            <div class="stat">
-              <div class="stat-icon">🌍</div>
-              <div
-                id="regionCount"
-                class="stat-number"
-              >0</div>
-              <div class="stat-label">
-                Регионҳо
-              </div>
-            </div>
-
-            <div class="stat">
-              <div class="stat-icon">📍</div>
-              <div
-                id="sectorCount"
-                class="stat-number"
-              >0</div>
-              <div class="stat-label">
-                Секторҳо
-              </div>
-            </div>
-
-            <div class="stat">
-              <div class="stat-icon">🏪</div>
-              <div
-                id="storeCount"
-                class="stat-number"
-              >0</div>
-              <div class="stat-label">
-                Мағозаҳо
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-title">
-            🌍 Регионҳо
-          </div>
-
-          <div
-            id="regions"
-            class="loading"
-          >
-            Бор шуда истодааст...
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-title">
-            📍 Секторҳо
-          </div>
-
-          <div
-            id="sectors"
-            class="loading"
-          >
-            Бор шуда истодааст...
-          </div>
-
-        </div>
-
-
-        <div class="card full">
-
-          <div class="card-title">
-            🏪 Мағозаҳо
-          </div>
-
-          <div
-            id="stores"
-            class="loading"
-          >
-            Бор шуда истодааст...
-          </div>
-
-        </div>
-
-
-        <div class="card full">
-
-          <div class="card-title">
-            🗺️ Назорати маршрутҳо
-          </div>
-
-          <div
-            id="trips"
-            class="loading"
-          >
-            Бор шуда истодааст...
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- =========================
-         SUPERVISOR
-    ========================= -->
-
-    <div
-      id="supervisorPage"
-      class="hidden"
-    >
-
-      <div class="dashboard-grid">
-
-        <div class="card full">
-
-          <div class="card-title">
-            🧑‍💼 Панели супервайзер
-          </div>
-
-          <div
-            id="supervisorWorkers"
-            class="loading"
-          >
-            Бор шуда истодааст...
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- =========================
-         APPLICANT
-    ========================= -->
-
-    <div
-      id="applicantPage"
-      class="hidden"
-    >
-
-      <div class="dashboard-grid">
-
-        <div class="card full">
-
-          <div class="card-title">
-            📝 Панели заявщик
-          </div>
-
-          <div
-            id="workerInfo"
-            class="item"
-          >
-            Бор шуда истодааст...
-          </div>
-
-        </div>
-
-
-        <div class="card full">
-
-          <div class="card-title">
-            📍 Назорати Location
-          </div>
-
-          <div class="gps-box">
-
-            <div class="gps-value">
-              <small>Latitude</small>
-              <strong id="latitude">—</strong>
-            </div>
-
-            <div class="gps-value">
-              <small>Longitude</small>
-              <strong id="longitude">—</strong>
-            </div>
-
-            <div class="gps-value">
-              <small>Масофа</small>
-              <strong>
-                <span id="distance">0.00</span> км
-              </strong>
-            </div>
-
-            <div class="gps-value">
-              <small>Вақти кор</small>
-              <strong>
-                <span id="workTime">0</span> дақ.
-              </strong>
-            </div>
-
-          </div>
-
-
-          <button
-            id="startButton"
-            class="action-btn start"
-            onclick="startWork()"
-          >
-            ▶️ Оғози кор
-          </button>
-
-
-          <button
-            id="stopButton"
-            class="action-btn finish hidden"
-            onclick="finishWork()"
-          >
-            🏁 Анҷоми кор
-          </button>
-
-
-          <div
-            id="gpsMessage"
-            class="message"
-          ></div>
-
-        </div>
-
-
-        <div class="card full">
-
-          <div class="card-title">
-            🏪 Мағозаҳои территорияи ман
-          </div>
-
-          <div
-            id="workerStores"
-            class="loading"
-          >
-            Бор шуда истодааст...
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </main>
-
-</section>
+</div>
 
 
 <script>
 
-/* ============================================================
-   SUPABASE CONNECTION
-============================================================ */
+  /* =====================================================
+     SUPABASE CONFIG
+  ===================================================== */
 
-const SUPABASE_URL =
-  "https://hyfcgiipstcuobjtnyvz.supabase.co";
+  const SUPABASE_URL =
+    "https://hyfcgiipstcuobjtnyvz.supabase.co";
 
-const SUPABASE_ANON_KEY =
-  "sb_publishable_C6rL2SmXOXwU8ZzJoX4z0Q_1OvXGPFu";
-
-
-const supabaseClient =
-  supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-  );
+  const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_C6rL2SmXOXwU8ZzJoX4z0Q_1OvXGPFu";
 
 
-/* ============================================================
-   VARIABLES
-============================================================ */
-
-let currentUser = null;
-let currentProfile = null;
-let currentWorker = null;
-let currentTrip = null;
-
-let watchId = null;
-let timer = null;
-let workStartedAt = null;
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
 
 
-/* ============================================================
-   MESSAGE
-============================================================ */
+  /* =====================================================
+     ELEMENTS
+  ===================================================== */
 
-function showMessage(
-  id,
-  text,
-  type
-) {
+  const loginPage =
+    document.getElementById("loginPage");
 
-  const box =
-    document.getElementById(id);
+  const dashboardPage =
+    document.getElementById("dashboardPage");
 
-  box.className =
-    "message show " + type;
+  const loginInput =
+    document.getElementById("login");
 
-  box.innerText = text;
-}
+  const passwordInput =
+    document.getElementById("password");
+
+  const loginButton =
+    document.getElementById("loginButton");
+
+  const logoutButton =
+    document.getElementById("logoutButton");
+
+  const loginMessage =
+    document.getElementById("loginMessage");
 
 
-/* ============================================================
-   LOGIN
-============================================================ */
+  /* =====================================================
+     MESSAGE
+  ===================================================== */
 
-async function login() {
+  function showLoginMessage(text, type = "error") {
 
-  const loginValue =
+    loginMessage.textContent = text;
+
+    loginMessage.className =
+      "message " + type;
+
+  }
+
+
+  function clearLoginMessage() {
+
+    loginMessage.textContent = "";
+
+    loginMessage.className = "message";
+
+  }
+
+
+  /* =====================================================
+     LOGIN
+  ===================================================== */
+
+  async function loginUser() {
+
+    clearLoginMessage();
+
+    const login =
+      loginInput.value.trim();
+
+    const password =
+      passwordInput.value;
+
+
+    if (!login || !password) {
+
+      showLoginMessage(
+        "⚠️ Login ва паролро пур кунед."
+      );
+
+      return;
+    }
+
+
+    loginButton.disabled = true;
+
+    loginButton.textContent =
+      "⏳ Санҷида истодааст...";
+
+
+    try {
+
+      /*
+       * Login-ро меёбем.
+       * Email ба корбар нишон дода намешавад.
+       */
+
+      const {
+        data: account,
+        error: accountError
+      } =
+        await supabaseClient
+          .from("login_accounts")
+          .select(`
+            login,
+            email,
+            role,
+            account_type,
+            region_id,
+            sector_id
+          `)
+          .eq("login", login)
+          .maybeSingle();
+
+
+      if (accountError) {
+
+        console.error(accountError);
+
+        showLoginMessage(
+          "❌ Хатои база: " +
+          accountError.message
+        );
+
+        return;
+      }
+
+
+      if (!account) {
+
+        showLoginMessage(
+          "❌ Login ё парол нодуруст аст."
+        );
+
+        return;
+      }
+
+
+      /*
+       * Supabase Auth
+       */
+
+      const {
+        data: authData,
+        error: authError
+      } =
+        await supabaseClient.auth.signInWithPassword({
+
+          email: account.email,
+
+          password: password
+
+        });
+
+
+      if (authError) {
+
+        console.error(authError);
+
+        showLoginMessage(
+          "❌ Login ё парол нодуруст аст."
+        );
+
+        return;
+      }
+
+
+      if (!authData || !authData.user) {
+
+        showLoginMessage(
+          "❌ Воридшавӣ иҷро нашуд."
+        );
+
+        return;
+      }
+
+
+      /*
+       * Profile
+       */
+
+      const {
+        data: profile,
+        error: profileError
+      } =
+        await supabaseClient
+          .from("profiles")
+          .select(`
+            id,
+            full_name,
+            role,
+            account_type,
+            region_id,
+            sector_id
+          `)
+          .eq("id", authData.user.id)
+          .maybeSingle();
+
+
+      if (profileError) {
+
+        console.error(profileError);
+
+        await supabaseClient.auth.signOut();
+
+        showLoginMessage(
+          "❌ Профили корбар хонда нашуд."
+        );
+
+        return;
+      }
+
+
+      if (!profile) {
+
+        await supabaseClient.auth.signOut();
+
+        showLoginMessage(
+          "❌ Профили ин аккаунт ёфт нашуд."
+        );
+
+        return;
+      }
+
+
+      await openDashboard(profile);
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      showLoginMessage(
+        "❌ Хатои система. Баъдтар кӯшиш кунед."
+      );
+
+    }
+
+    finally {
+
+      loginButton.disabled = false;
+
+      loginButton.textContent =
+        "🔑 Ворид шудан";
+
+    }
+
+  }
+
+
+  /* =====================================================
+     OPEN DASHBOARD
+  ===================================================== */
+
+  async function openDashboard(profile) {
+
+    loginPage.classList.add("hidden");
+
+    dashboardPage.classList.remove("hidden");
+
+
+    /*
+     * Reset
+     */
+
+    hideAllPanels();
+
+
+    const role =
+      String(profile.role || "")
+        .toLowerCase();
+
+    const accountType =
+      String(profile.account_type || "")
+        .toLowerCase();
+
+
+    document.getElementById(
+      "accountName"
+    ).textContent =
+      profile.full_name || "Корбар";
+
+
+    document.getElementById(
+      "accountRole"
+    ).textContent =
+      roleName(role);
+
+
+    /* ==================================================
+       DIRECTOR
+    ================================================== */
+
+    if (role === "director") {
+
+      document.getElementById(
+        "roleIcon"
+      ).textContent = "👑";
+
+      document.getElementById(
+        "welcomeTitle"
+      ).textContent =
+        "Панели Director";
+
+      document.getElementById(
+        "welcomeText"
+      ).textContent =
+        "Назорати умумии Go to Market";
+
+      document.getElementById(
+        "directorPanel"
+      ).classList.remove("hidden");
+
+      return;
+    }
+
+
+    /* ==================================================
+       SUPERVISOR
+    ================================================== */
+
+    if (role === "supervisor") {
+
+      document.getElementById(
+        "roleIcon"
+      ).textContent = "👨‍💼";
+
+      document.getElementById(
+        "welcomeTitle"
+      ).textContent =
+        "Панели Supervisor";
+
+      document.getElementById(
+        "welcomeText"
+      ).textContent =
+        "Назорати коргарон";
+
+      document.getElementById(
+        "supervisorPanel"
+      ).classList.remove("hidden");
+
+      return;
+    }
+
+
+    /* ==================================================
+       ZAYAVSHIK
+    ================================================== */
+
+    if (role === "zayavshik") {
+
+      document.getElementById(
+        "typeBox"
+      ).classList.remove("hidden");
+
+      document.getElementById(
+        "accountType"
+      ).textContent =
+        accountType === "sector"
+          ? "Sector"
+          : accountType === "region"
+            ? "Region"
+            : "Номаълум";
+
+
+      /* ---------------- SECTOR ---------------- */
+
+      if (accountType === "sector") {
+
+        document.getElementById(
+          "roleIcon"
+        ).textContent = "📍";
+
+        document.getElementById(
+          "welcomeTitle"
+        ).textContent =
+          "Панели Sector";
+
+        document.getElementById(
+          "welcomeText"
+        ).textContent =
+          "Zayavshik — Sector";
+
+        document.getElementById(
+          "sectorBox"
+        ).classList.remove("hidden");
+
+        document.getElementById(
+          "sectorPanel"
+        ).classList.remove("hidden");
+
+
+        await loadSector(
+          profile.sector_id
+        );
+
+        return;
+      }
+
+
+      /* ---------------- REGION ---------------- */
+
+      if (accountType === "region") {
+
+        document.getElementById(
+          "roleIcon"
+        ).textContent = "🌍";
+
+        document.getElementById(
+          "welcomeTitle"
+        ).textContent =
+          "Панели Region";
+
+        document.getElementById(
+          "welcomeText"
+        ).textContent =
+          "Zayavshik — Region";
+
+        document.getElementById(
+          "regionBox"
+        ).classList.remove("hidden");
+
+        document.getElementById(
+          "regionPanel"
+        ).classList.remove("hidden");
+
+
+        await loadRegion(
+          profile.region_id
+        );
+
+        return;
+      }
+
+    }
+
+
+    document.getElementById(
+      "roleIcon"
+    ).textContent = "⚠️";
+
+    document.getElementById(
+      "welcomeTitle"
+    ).textContent =
+      "Нақши номаълум";
+
+    document.getElementById(
+      "welcomeText"
+    ).textContent =
+      "Ба администратор муроҷиат кунед.";
+
+  }
+
+
+  /* =====================================================
+     LOAD SECTOR
+  ===================================================== */
+
+  async function loadSector(id) {
+
+    if (!id) {
+
+      document.getElementById(
+        "sectorName"
+      ).textContent =
+        "Сектор муайян нашудааст";
+
+      return;
+    }
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("sectors")
+        .select("id,name,code")
+        .eq("id", id)
+        .maybeSingle();
+
+
+    if (error) {
+
+      console.error(error);
+
+      document.getElementById(
+        "sectorName"
+      ).textContent =
+        "Хатои боркунӣ";
+
+      return;
+    }
+
+
+    document.getElementById(
+      "sectorName"
+    ).textContent =
+      data
+        ? data.name
+        : "Сектор ёфт нашуд";
+
+  }
+
+
+  /* =====================================================
+     LOAD REGION
+  ===================================================== */
+
+  async function loadRegion(id) {
+
+    if (!id) {
+
+      document.getElementById(
+        "regionName"
+      ).textContent =
+        "Регион муайян нашудааст";
+
+      return;
+    }
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("regions")
+        .select("id,name,code")
+        .eq("id", id)
+        .maybeSingle();
+
+
+    if (error) {
+
+      console.error(error);
+
+      document.getElementById(
+        "regionName"
+      ).textContent =
+        "Хатои боркунӣ";
+
+      return;
+    }
+
+
+    document.getElementById(
+      "regionName"
+    ).textContent =
+      data
+        ? data.name
+        : "Регион ёфт нашуд";
+
+  }
+
+
+  /* =====================================================
+     ROLE NAME
+  ===================================================== */
+
+  function roleName(role) {
+
+    switch (role) {
+
+      case "director":
+        return "Director";
+
+      case "supervisor":
+        return "Supervisor";
+
+      case "zayavshik":
+        return "Zayavshik";
+
+      default:
+        return "Номаълум";
+
+    }
+
+  }
+
+
+  /* =====================================================
+     HIDE PANELS
+  ===================================================== */
+
+  function hideAllPanels() {
+
     document
-      .getElementById("login")
-      .value
-      .trim();
+      .getElementById("directorPanel")
+      .classList.add("hidden");
 
-  const password =
     document
-      .getElementById("password")
-      .value;
+      .getElementById("supervisorPanel")
+      .classList.add("hidden");
 
+    document
+      .getElementById("sectorPanel")
+      .classList.add("hidden");
 
-  if (!loginValue || !password) {
+    document
+      .getElementById("regionPanel")
+      .classList.add("hidden");
 
-    showMessage(
-      "loginMessage",
-      "Login ва паролро ворид кунед.",
-      "error"
-    );
+    document
+      .getElementById("typeBox")
+      .classList.add("hidden");
 
-    return;
+    document
+      .getElementById("sectorBox")
+      .classList.add("hidden");
+
+    document
+      .getElementById("regionBox")
+      .classList.add("hidden");
+
   }
 
 
-  showMessage(
-    "loginMessage",
-    "⏳ Санҷиш...",
-    "info"
-  );
+  /* =====================================================
+     LOGOUT
+  ===================================================== */
 
-
-  /*
-    Login дар система ҳамчун username
-    истифода мешавад.
-
-    Барои Supabase Auth бояд login
-    ба email-и дохилии аккаунт
-    мувофиқ карда шавад.
-  */
-
-
-  const {
-    data: account,
-    error: accountError
-  } =
-    await supabaseClient
-      .from("login_accounts")
-      .select("email")
-      .eq("login", loginValue)
-      .maybeSingle();
-
-
-  if (accountError || !account) {
-
-    showMessage(
-      "loginMessage",
-      "❌ Login ё парол нодуруст аст.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth
-      .signInWithPassword({
-
-        email:
-          account.email,
-
-        password:
-          password
-
-      });
-
-
-  if (error) {
-
-    showMessage(
-      "loginMessage",
-      "❌ Login ё парол нодуруст аст.",
-      "error"
-    );
-
-    return;
-  }
-
-
-  currentUser =
-    data.user;
-
-
-  await loadProfile();
-
-}
-
-
-/* ============================================================
-   PROFILE
-============================================================ */
-
-async function loadProfile() {
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("profiles")
-      .select("*")
-      .eq(
-        "id",
-        currentUser.id
-      )
-      .single();
-
-
-  if (error || !data) {
-
-    showMessage(
-      "loginMessage",
-      "❌ Профили аккаунт ёфт нашуд.",
-      "error"
-    );
+  async function logoutUser() {
 
     await supabaseClient.auth.signOut();
 
-    return;
-  }
+    dashboardPage.classList.add("hidden");
 
+    loginPage.classList.remove("hidden");
 
-  currentProfile =
-    data;
+    loginInput.value = "";
 
+    passwordInput.value = "";
 
-  document
-    .getElementById("loginPage")
-    .classList.add("hidden");
-
-
-  document
-    .getElementById("app")
-    .classList.remove("hidden");
-
-
-  if (
-    data.role ===
-    "director"
-  ) {
-
-    document
-      .getElementById("roleText")
-      .innerText =
-      "Директор";
-
-    await openDirector();
+    clearLoginMessage();
 
   }
 
-  else if (
-    data.role ===
-    "supervisor"
-  ) {
 
-    document
-      .getElementById("roleText")
-      .innerText =
-      "Супервайзер";
+  /* =====================================================
+     ENTER KEY
+  ===================================================== */
 
-    await openSupervisor();
+  loginInput.addEventListener(
+    "keydown",
+    function(event) {
 
-  }
+      if (event.key === "Enter") {
 
-  else if (
-    data.role ===
-    "applicant"
-  ) {
+        passwordInput.focus();
 
-    document
-      .getElementById("roleText")
-      .innerText =
-      "Заявщик";
-
-    await openApplicant();
-
-  }
-
-  else {
-
-    alert(
-      "Нақши аккаунт муайян нашуд."
-    );
-
-    await logout();
-
-  }
-
-}
-
-
-/* ============================================================
-   DIRECTOR
-============================================================ */
-
-async function openDirector() {
-
-  document
-    .getElementById(
-      "directorPage"
-    )
-    .classList.remove(
-      "hidden"
-    );
-
-
-  await loadRegions();
-  await loadSectors();
-  await loadStores();
-  await loadTrips();
-
-}
-
-
-/* ============================================================
-   REGIONS
-============================================================ */
-
-async function loadRegions() {
-
-  const box =
-    document.getElementById(
-      "regions"
-    );
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("regions")
-      .select("*")
-      .order("name");
-
-
-  if (error) {
-
-    box.innerText =
-      "❌ " + error.message;
-
-    return;
-  }
-
-
-  document
-    .getElementById(
-      "regionCount"
-    )
-    .innerText =
-    data?.length || 0;
-
-
-  if (
-    !data ||
-    data.length === 0
-  ) {
-
-    box.innerText =
-      "Ҳоло регион нест.";
-
-    return;
-  }
-
-
-  box.innerHTML = "";
-
-
-  data.forEach(
-    region => {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-      div.className =
-        "item";
-
-      div.innerHTML = `
-        <div class="item-title">
-          🌍 ${escapeHtml(
-            region.name
-          )}
-        </div>
-      `;
-
-      box.appendChild(div);
+      }
 
     }
   );
 
-}
 
+  passwordInput.addEventListener(
+    "keydown",
+    function(event) {
 
-/* ============================================================
-   SECTORS
-============================================================ */
+      if (event.key === "Enter") {
 
-async function loadSectors() {
+        loginUser();
 
-  const box =
-    document.getElementById(
-      "sectors"
-    );
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("sectors")
-      .select("*")
-      .order("name");
-
-
-  if (error) {
-
-    box.innerText =
-      "❌ " + error.message;
-
-    return;
-  }
-
-
-  document
-    .getElementById(
-      "sectorCount"
-    )
-    .innerText =
-    data?.length || 0;
-
-
-  if (
-    !data ||
-    data.length === 0
-  ) {
-
-    box.innerText =
-      "Ҳоло сектор нест.";
-
-    return;
-  }
-
-
-  box.innerHTML = "";
-
-
-  data.forEach(
-    sector => {
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-      div.className =
-        "item";
-
-      div.innerHTML = `
-        <div class="item-title">
-          📍 ${escapeHtml(
-            sector.name
-          )}
-        </div>
-      `;
-
-      box.appendChild(div);
+      }
 
     }
   );
 
-}
+
+  loginButton.addEventListener(
+    "click",
+    loginUser
+  );
 
 
-/* ============================================================
-   STORES
-============================================================ */
+  logoutButton.addEventListener(
+    "click",
+    logoutUser
+  );
 
-async function loadStor
+
+  /* =====================================================
+     EXISTING SESSION
+  ===================================================== */
+
+  async function checkSession() {
+
+    const {
+      data
+    } =
+      await supabaseClient.auth.getSession();
+
+
+    if (!data.session) {
+
+      return;
+
+    }
+
+
+    const user =
+      data.session.user;
+
+
+    const {
+      data: profile,
+      error
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(`
+          id,
+          full_name,
+          role,
+          account_type,
+          region_id,
+          sector_id
+        `)
+        .eq("id", user.id)
+        .maybeSingle();
+
+
+    if (!error && profile) {
+
+      await openDashboard(profile);
+
+    }
+
+  }
+
+
+  checkSession();
+
+</script>
+
+</body>
+  </html>
