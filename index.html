@@ -1,1018 +1,996 @@
 <!DOCTYPE html>
 <html lang="tg">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-  <title>Go to Market</title>
-
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #050816;
-      --card: rgba(14, 22, 43, .82);
-      --card2: rgba(20, 30, 55, .72);
-      --border: rgba(255,255,255,.09);
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --blue: #38bdf8;
-      --violet: #6366f1;
-      --green: #22c55e;
-      --orange: #f59e0b;
-      --red: #ef4444;
-    }
-
-    body {
-      min-height: 100vh;
-      font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(14,165,233,.20), transparent 32%),
-        radial-gradient(circle at 90% 15%, rgba(99,102,241,.22), transparent 34%),
-        radial-gradient(circle at 50% 100%, rgba(34,197,94,.10), transparent 35%),
-        #050816;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size: 42px 42px;
-      mask-image: linear-gradient(to bottom, black, transparent);
-    }
-
-    button,
-    input {
-      font: inherit;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* =========================
-       LOGIN
-    ========================= */
-
-    #loginPage {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 22px;
-    }
-
-    .login-wrapper {
-      width: 100%;
-      max-width: 460px;
-    }
-
-    .brand {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .brand-icon {
-      width: 82px;
-      height: 82px;
-      margin: 0 auto 17px;
-      border-radius: 25px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 43px;
-      background:
-        linear-gradient(145deg, #172554, #0f172a);
-      border: 1px solid rgba(56,189,248,.25);
-      box-shadow:
-        0 20px 55px rgba(0,0,0,.35),
-        0 0 45px rgba(56,189,248,.10);
-    }
-
-    .brand h1 {
-      font-size: 34px;
-      font-weight: 800;
-      letter-spacing: -.8px;
-    }
-
-    .brand p {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .login-card {
-      position: relative;
-      overflow: hidden;
-      padding: 30px;
-      border-radius: 30px;
-      background:
-        linear-gradient(
-          145deg,
-          rgba(15,23,42,.94),
-          rgba(8,15,32,.88)
-        );
-      border: 1px solid var(--border);
-      box-shadow:
-        0 35px 100px rgba(0,0,0,.48),
-        inset 0 1px 0 rgba(255,255,255,.04);
-      backdrop-filter: blur(22px);
-    }
-
-    .login-card::before {
-      content: "";
-      position: absolute;
-      width: 240px;
-      height: 240px;
-      right: -100px;
-      top: -100px;
-      background: rgba(99,102,241,.15);
-      filter: blur(65px);
-      border-radius: 50%;
-    }
-
-    .login-title {
-      position: relative;
-      margin-bottom: 26px;
-    }
-
-    .login-title h2 {
-      font-size: 25px;
-      margin-bottom: 7px;
-    }
-
-    .login-title p {
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
-
-    .field {
-      position: relative;
-      margin-bottom: 17px;
-    }
-
-    .field label {
-      display: block;
-      margin-bottom: 9px;
-      font-size: 14px;
-      font-weight: 700;
-      color: #cbd5e1;
-    }
-
-    .input-box {
-      position: relative;
-    }
-
-    .input-box span {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 20px;
-      z-index: 2;
-    }
-
-    .input-box input {
-      width: 100%;
-      height: 60px;
-      border-radius: 17px;
-      border: 1px solid rgba(148,163,184,.14);
-      outline: none;
-      color: white;
-      background: rgba(2,6,23,.68);
-      padding: 0 48px 0 51px;
-      transition: .2s;
-    }
-
-    .input-box input:focus {
-      border-color: rgba(56,189,248,.65);
-      box-shadow: 0 0 0 4px rgba(56,189,248,.08);
-    }
-
-    .eye {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      color: #94a3b8;
-      font-size: 20px;
-      z-index: 3;
-      user-select: none;
-    }
-
-    .login-button {
-      width: 100%;
-      height: 61px;
-      margin-top: 7px;
-      border: none;
-      border-radius: 18px;
-      cursor: pointer;
-      color: white;
-      font-weight: 800;
-      font-size: 16px;
-      background:
-        linear-gradient(110deg, #0ea5e9, #6366f1 75%);
-      box-shadow:
-        0 18px 40px rgba(37,99,235,.25);
-      transition: .2s;
-    }
-
-    .login-button:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 22px 50px rgba(37,99,235,.35);
-    }
-
-    .login-button:active {
-      transform: scale(.98);
-    }
-
-    .login-button.loading {
-      opacity: .65;
-      pointer-events: none;
-    }
-
-    .message {
-      margin-top: 16px;
-      padding: 13px 15px;
-      border-radius: 14px;
-      font-size: 13px;
-      line-height: 1.45;
-      display: none;
-    }
-
-    .message.error {
-      display: block;
-      color: #fecaca;
-      background: rgba(127,29,29,.22);
-      border: 1px solid rgba(239,68,68,.28);
-    }
-
-    .message.success {
-      display: block;
-      color: #bbf7d0;
-      background: rgba(20,83,45,.22);
-      border: 1px solid rgba(34,197,94,.25);
-    }
-
-    .secure-note {
-      text-align: center;
-      color: #475569;
-      font-size: 11px;
-      letter-spacing: 1.3px;
-      margin-top: 25px;
-      text-transform: uppercase;
-    }
-
-    /* =========================
-       APP
-    ========================= */
-
-    #appPage {
-      min-height: 100vh;
-      padding: 18px;
-    }
-
-    .app-container {
-      max-width: 1180px;
-      margin: auto;
-    }
-
-    .topbar {
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 14px 17px;
-      border-radius: 22px;
-      background: rgba(15,23,42,.72);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(18px);
-      position: sticky;
-      top: 12px;
-      z-index: 20;
-    }
-
-    .top-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .top-brand-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(145deg,#172554,#0f172a);
-      font-size: 23px;
-    }
-
-    .top-brand strong {
-      display: block;
-      font-size: 16px;
-    }
-
-    .top-brand small {
-      display: block;
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .user-area {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-    }
-
-    .role-badge {
-      padding: 8px 11px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: 800;
-      background: rgba(59,130,246,.12);
-      color: #93c5fd;
-      border: 1px solid rgba(59,130,246,.20);
-    }
-
-    .logout {
-      border: 1px solid rgba(239,68,68,.20);
-      background: rgba(127,29,29,.15);
-      color: #fca5a5;
-      border-radius: 11px;
-      padding: 9px 12px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 12px;
-    }
-
-    .dashboard {
-      margin-top: 22px;
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      border-radius: 27px;
-      padding: 30px;
-      background:
-        linear-gradient(
-          135deg,
-          rgba(14,165,233,.13),
-          rgba(99,102,241,.13),
-          rgba(15,23,42,.80)
-        );
-      border: 1px solid var(--border);
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      right: -80px;
-      top: -100px;
-      width: 280px;
-      height: 280px;
-      border-radius: 50%;
-      background: rgba(99,102,241,.13);
-      filter: blur(65px);
-    }
-
-    .hero small {
-      color: #7dd3fc;
-      font-weight: 800;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-    }
-
-    .hero h2 {
-      margin-top: 10px;
-      font-size: clamp(27px,5vw,42px);
-      letter-spacing: -.9px;
-    }
-
-    .hero p {
-      color: var(--muted);
-      margin-top: 9px;
-      line-height: 1.6;
-      max-width: 680px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(4,1fr);
-      gap: 14px;
-      margin-top: 15px;
-    }
-
-    .stat {
-      padding: 20px;
-      border-radius: 20px;
-      background: rgba(15,23,42,.68);
-      border: 1px solid var(--border);
-    }
-
-    .stat-icon {
-      font-size: 23px;
-      margin-bottom: 12px;
-    }
-
-    .stat strong {
-      font-size: 23px;
-      display: block;
-    }
-
-    .stat span {
-      color: var(--muted);
-      font-size: 12px;
-      display: block;
-      margin-top: 4px;
-    }
-
-    .panel {
-      margin-top: 15px;
-      padding: 23px;
-      border-radius: 23px;
-      background: rgba(15,23,42,.68);
-      border: 1px solid var(--border);
-    }
-
-    .panel-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      align-items: center;
-      margin-bottom: 17px;
-    }
-
-    .panel-head h3 {
-      font-size: 18px;
-    }
-
-    .panel-head span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .action-grid {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 12px;
-    }
-
-    .action {
-      min-height: 105px;
-      border-radius: 17px;
-      border: 1px solid var(--border);
-      background: rgba(2,6,23,.43);
-      color: white;
-      padding: 17px;
-      text-align: left;
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .action:hover {
-      transform: translateY(-2px);
-      border-color: rgba(56,189,248,.30);
-      background: rgba(14,165,233,.06);
-    }
-
-    .action b {
-      display: block;
-      font-size: 23px;
-      margin-bottom: 10px;
-    }
-
-    .action strong {
-      display: block;
-      font-size: 13px;
-    }
-
-    .action small {
-      display: block;
-      color: var(--muted);
-      margin-top: 5px;
-    }
-
-    .access-list {
-      display: grid;
-      gap: 9px;
-    }
-
-    .access-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 14px;
-      border-radius: 14px;
-      background: rgba(2,6,23,.35);
-      border: 1px solid rgba(255,255,255,.05);
-    }
-
-    .access-item-left {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-    }
-
-    .access-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 11px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(59,130,246,.10);
-    }
-
-    .access-item strong {
-      font-size: 13px;
-      display: block;
-    }
-
-    .access-item small {
-      color: var(--muted);
-      display: block;
-      margin-top: 3px;
-    }
-
-    .status {
-      color: #86efac;
-      font-size: 11px;
-      font-weight: 800;
-    }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media (max-width: 850px) {
-      .cards {
-        grid-template-columns: repeat(2,1fr);
-      }
-
-      .action-grid {
-        grid-template-columns: repeat(2,1fr);
-      }
-    }
-
-    @media (max-width: 560px) {
-      #loginPage {
-        padding: 14px;
-        align-items: center;
-      }
-
-      .brand h1 {
-        font-size: 29px;
-      }
-
-      .brand-icon {
-        width: 72px;
-        height: 72px;
-        font-size: 36px;
-      }
-
-      .login-card {
-        padding: 22px;
-        border-radius: 25px;
-      }
-
-      .cards,
-      .action-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar {
-        top: 7px;
-      }
-
-      .role-badge {
-        display: none;
-      }
-
-      .hero {
-        padding: 23px;
-      }
-
-      .hero h2 {
-        font-size: 29px;
-      }
-
-      .panel {
-        padding: 18px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Go to Market</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+:root{
+    --bg:#070b16;
+    --card:rgba(18,25,45,.82);
+    --card2:rgba(24,33,58,.92);
+    --text:#f8fafc;
+    --muted:#94a3b8;
+    --primary:#7c3aed;
+    --primary2:#4f46e5;
+    --success:#22c55e;
+    --danger:#ef4444;
+    --border:rgba(255,255,255,.09);
+    --shadow:0 25px 70px rgba(0,0,0,.45);
+}
+
+body{
+    min-height:100vh;
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%,rgba(124,58,237,.28),transparent 30%),
+        radial-gradient(circle at 90% 20%,rgba(59,130,246,.22),transparent 28%),
+        radial-gradient(circle at 50% 100%,rgba(16,185,129,.12),transparent 30%),
+        var(--bg);
+    color:var(--text);
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* LOGIN */
+
+#loginPage{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:22px;
+}
+
+.login-wrapper{
+    width:100%;
+    max-width:440px;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:24px;
+}
+
+.logo-icon{
+    width:78px;
+    height:78px;
+    margin:0 auto 16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:24px;
+    background:linear-gradient(135deg,var(--primary),#2563eb);
+    box-shadow:0 18px 50px rgba(99,102,241,.35);
+    font-size:37px;
+}
+
+.logo h1{
+    font-size:32px;
+    font-weight:850;
+    letter-spacing:-1px;
+}
+
+.logo p{
+    color:var(--muted);
+    margin-top:7px;
+}
+
+.login-card{
+    background:linear-gradient(145deg,rgba(24,33,58,.92),rgba(11,17,31,.94));
+    border:1px solid var(--border);
+    border-radius:30px;
+    padding:30px;
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(22px);
+}
+
+.login-title{
+    font-size:22px;
+    font-weight:800;
+    margin-bottom:22px;
+}
+
+.field{
+    margin-bottom:17px;
+}
+
+.field label{
+    display:block;
+    color:#cbd5e1;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.input-wrap{
+    position:relative;
+}
+
+.input-wrap span{
+    position:absolute;
+    left:15px;
+    top:50%;
+    transform:translateY(-50%);
+    opacity:.65;
+}
+
+.input-wrap input{
+    padding-left:46px;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    border:1px solid var(--border);
+    outline:none;
+    color:white;
+    background:rgba(2,6,23,.58);
+    border-radius:15px;
+    padding:14px 15px;
+    transition:.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:rgba(124,58,237,.8);
+    box-shadow:0 0 0 4px rgba(124,58,237,.12);
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+select option{
+    background:#111827;
+    color:white;
+}
+
+.login-btn{
+    width:100%;
+    border:0;
+    border-radius:16px;
+    padding:15px;
+    color:white;
+    font-weight:800;
+    font-size:16px;
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    box-shadow:0 14px 35px rgba(99,102,241,.28);
+    transition:.2s;
+}
+
+.login-btn:hover{
+    transform:translateY(-1px);
+    filter:brightness(1.08);
+}
+
+.login-btn:disabled{
+    opacity:.65;
+    cursor:not-allowed;
+}
+
+.message{
+    margin-top:15px;
+    border-radius:13px;
+    padding:12px 14px;
+    font-size:14px;
+    display:none;
+}
+
+.message.error{
+    display:block;
+    background:rgba(239,68,68,.12);
+    border:1px solid rgba(239,68,68,.25);
+    color:#fca5a5;
+}
+
+.message.success{
+    display:block;
+    background:rgba(34,197,94,.12);
+    border:1px solid rgba(34,197,94,.25);
+    color:#86efac;
+}
+
+/* APP */
+
+#appPage{
+    min-height:100vh;
+}
+
+.topbar{
+    position:sticky;
+    top:0;
+    z-index:20;
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 24px;
+    background:rgba(7,11,22,.78);
+    border-bottom:1px solid var(--border);
+    backdrop-filter:blur(18px);
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    font-weight:850;
+    font-size:19px;
+}
+
+.brand-mark{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--primary),#2563eb);
+}
+
+.user-area{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.user-name{
+    text-align:right;
+}
+
+.user-name strong{
+    display:block;
+    font-size:14px;
+}
+
+.user-name small{
+    color:var(--muted);
+}
+
+.logout{
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.04);
+    color:white;
+    border-radius:12px;
+    padding:10px 13px;
+}
+
+.container{
+    width:min(1200px,calc(100% - 32px));
+    margin:0 auto;
+    padding:30px 0 60px;
+}
+
+.hero{
+    margin-bottom:25px;
+}
+
+.hero h2{
+    font-size:31px;
+    letter-spacing:-.8px;
+}
+
+.hero p{
+    color:var(--muted);
+    margin-top:6px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:22px;
+}
+
+.stat{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 15px 45px rgba(0,0,0,.18);
+}
+
+.stat-icon{
+    font-size:25px;
+    margin-bottom:12px;
+}
+
+.stat-number{
+    font-size:27px;
+    font-weight:850;
+}
+
+.stat-label{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:4px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:22px;
+    box-shadow:0 15px 45px rgba(0,0,0,.18);
+}
+
+.card.full{
+    grid-column:1/-1;
+}
+
+.card h3{
+    font-size:18px;
+    margin-bottom:17px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:13px;
+}
+
+.form-grid .full-field{
+    grid-column:1/-1;
+}
+
+.primary{
+    border:0;
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    color:white;
+    border-radius:13px;
+    padding:13px 17px;
+    font-weight:800;
+}
+
+.secondary{
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.04);
+    color:white;
+    border-radius:13px;
+    padding:13px 17px;
+    font-weight:700;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:14px;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+
+th,
+td{
+    text-align:left;
+    padding:13px 10px;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
+}
+
+th{
+    color:#cbd5e1;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+td{
+    color:#e2e8f0;
+}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    border-radius:999px;
+    padding:5px 9px;
+    font-size:11px;
+    font-weight:800;
+    background:rgba(124,58,237,.14);
+    color:#c4b5fd;
+}
+
+.store-list{
+    display:grid;
+    gap:12px;
+}
+
+.store{
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:16px;
+    background:rgba(255,255,255,.025);
+}
+
+.store-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.store h4{
+    font-size:16px;
+}
+
+.store p{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:5px;
+}
+
+.map-btn{
+    display:inline-block;
+    text-decoration:none;
+    color:white;
+    background:rgba(59,130,246,.15);
+    border:1px solid rgba(59,130,246,.25);
+    padding:8px 10px;
+    border-radius:10px;
+    font-size:12px;
+    font-weight:750;
+}
+
+.empty{
+    text-align:center;
+    color:var(--muted);
+    padding:30px 10px;
+}
+
+.loading{
+    opacity:.65;
+    pointer-events:none;
+}
+
+/* MOBILE */
+
+@media(max-width:850px){
+    .cards{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+    .card.full{
+        grid-column:auto;
+    }
+}
+
+@media(max-width:600px){
+    .topbar{
+        padding:0 14px;
+    }
+
+    .user-name{
+        display:none;
+    }
+
+    .container{
+        width:min(100% - 20px,1200px);
+        padding-top:20px;
+    }
+
+    .hero h2{
+        font-size:25px;
+    }
+
+    .cards{
+        gap:10px;
+    }
+
+    .stat{
+        padding:15px;
+    }
+
+    .stat-number{
+        font-size:23px;
+    }
+
+    .login-card{
+        padding:22px;
+        border-radius:24px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid .full-field{
+        grid-column:auto;
+    }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- =========================
-       LOGIN PAGE
-  ========================== -->
+<!-- =====================================================
+     LOGIN PAGE
+===================================================== -->
 
-  <section id="loginPage">
+<section id="loginPage">
 
     <div class="login-wrapper">
 
-      <div class="brand">
-        <div class="brand-icon">🛍️</div>
-        <h1>Go to Market</h1>
-        <p>Системаи идоракунии мағозаҳо</p>
-      </div>
-
-      <div class="login-card">
-
-        <div class="login-title">
-          <h2>🔐 Воридшавӣ</h2>
-          <p>
-            Барои идома Login ва пароли худро ворид кунед.
-          </p>
+        <div class="logo">
+            <div class="logo-icon">🛍️</div>
+            <h1>Go to Market</h1>
+            <p>Системаи идоракунии мағозаҳо</p>
         </div>
 
-        <form id="loginForm">
+        <div class="login-card">
 
-          <div class="field">
-            <label for="login">Login</label>
-
-            <div class="input-box">
-              <span>👤</span>
-              <input
-                id="login"
-                type="text"
-                autocomplete="username"
-                placeholder="Login-и худро ворид кунед"
-                required
-              >
+            <div class="login-title">
+                🔐 Воридшавӣ
             </div>
-          </div>
 
-          <div class="field">
-            <label for="password">Парол</label>
+            <form id="loginForm">
 
-            <div class="input-box">
-              <span>🔑</span>
+                <div class="field">
+                    <label for="login">Login</label>
 
-              <input
-                id="password"
-                type="password"
-                autocomplete="current-password"
-                placeholder="Парол"
-                required
-              >
+                    <div class="input-wrap">
+                        <span>👤</span>
+                        <input
+                            id="login"
+                            type="text"
+                            autocomplete="username"
+                            placeholder="Login-ро ворид кунед"
+                            required
+                        >
+                    </div>
+                </div>
 
-              <div
-                class="eye"
-                id="togglePassword"
-                title="Намоиш / пинҳон кардани парол"
-              >👁️</div>
-            </div>
-          </div>
+                <div class="field">
+                    <label for="password">Парол</label>
 
-          <button
-            id="loginButton"
-            class="login-button"
-            type="submit"
-          >
-            Ворид шудан&nbsp;&nbsp; →
-          </button>
+                    <div class="input-wrap">
+                        <span>🔒</span>
+                        <input
+                            id="password"
+                            type="password"
+                            autocomplete="current-password"
+                            placeholder="Паролро ворид кунед"
+                            required
+                        >
+                    </div>
+                </div>
 
-        </form>
+                <button
+                    id="loginBtn"
+                    class="login-btn"
+                    type="submit"
+                >
+                    🔑 Ворид шудан
+                </button>
 
-        <div id="message" class="message"></div>
+                <div
+                    id="loginMessage"
+                    class="message"
+                ></div>
 
-        <div class="secure-note">
-          GO TO MARKET • SECURE ACCESS
+            </form>
         </div>
-
-      </div>
-
     </div>
+</section>
 
-  </section>
 
+<!-- =====================================================
+     APP PAGE
+===================================================== -->
 
-  <!-- =========================
-       APP PAGE
-  ========================== -->
+<section id="appPage" class="hidden">
 
-  <section id="appPage" class="hidden">
+    <header class="topbar">
 
-    <div class="app-container">
-
-      <header class="topbar">
-
-        <div class="top-brand">
-          <div class="top-brand-icon">🛍️</div>
-
-          <div>
-            <strong>Go to Market</strong>
-            <small id="topUserName">Система</small>
-          </div>
+        <div class="brand">
+            <div class="brand-mark">🛍️</div>
+            Go to Market
         </div>
 
         <div class="user-area">
 
-          <div id="roleBadge" class="role-badge">
-            USER
-          </div>
+            <div class="user-name">
+                <strong id="currentUserName">User</strong>
+                <small id="currentUserRole">Role</small>
+            </div>
 
-          <button
-            class="logout"
-            id="logoutButton"
-          >
-            Баромадан
-          </button>
+            <button
+                class="logout"
+                id="logoutBtn"
+            >
+                🚪 Баромадан
+            </button>
+
+        </div>
+    </header>
+
+
+    <main class="container">
+
+        <div class="hero">
+
+            <h2 id="dashboardTitle">
+                Хуш омадед
+            </h2>
+
+            <p id="dashboardSubtitle">
+                Панели идоракунӣ
+            </p>
 
         </div>
 
-      </header>
 
+        <!-- STATS -->
 
-      <main class="dashboard">
+        <div class="cards">
 
-        <section class="hero">
-
-          <small id="dashboardType">
-            DASHBOARD
-          </small>
-
-          <h2 id="dashboardTitle">
-            Хуш омадед
-          </h2>
-
-          <p id="dashboardDescription">
-            Панели идоракунии Go to Market.
-          </p>
-
-        </section>
-
-
-        <section id="stats" class="cards"></section>
-
-        <section class="panel">
-
-          <div class="panel-head">
-            <div>
-              <h3>⚡ Амалиётҳо</h3>
-              <span>Имкониятҳои дастрас</span>
+            <div class="stat">
+                <div class="stat-icon">🏪</div>
+                <div
+                    id="storeCount"
+                    class="stat-number"
+                >
+                    0
+                </div>
+                <div class="stat-label">
+                    Мағозаҳо
+                </div>
             </div>
-          </div>
 
-          <div id="actions" class="action-grid"></div>
-
-        </section>
-
-
-        <section class="panel">
-
-          <div class="panel-head">
-            <div>
-              <h3>🛡️ Ҳуқуқи дастрасӣ</h3>
-              <span id="accessDescription">
-                Маълумоти аккаунт
-              </span>
+            <div class="stat">
+                <div class="stat-icon">🗺️</div>
+                <div
+                    id="regionCount"
+                    class="stat-number"
+                >
+                    6
+                </div>
+                <div class="stat-label">
+                    Регионҳо
+                </div>
             </div>
-          </div>
 
-          <div id="accessList" class="access-list"></div>
+            <div class="stat">
+                <div class="stat-icon">📍</div>
+                <div
+                    id="sectorCount"
+                    class="stat-number"
+                >
+                    6
+                </div>
+                <div class="stat-label">
+                    Секторҳо
+                </div>
+            </div>
 
-        </section>
+            <div class="stat">
+                <div class="stat-icon">👤</div>
+                <div
+                    id="roleCount"
+                    class="stat-number"
+                >
+                    —
+                </div>
+                <div class="stat-label">
+                    Нақши шумо
+                </div>
+            </div>
 
-      </main>
-
-    </div>
-
-  </section>
-
-
-  <script>
-    /* =========================================================
-       GO TO MARKET
-       SUPABASE CONFIG
-       ========================================================= */
-
-    const SUPABASE_URL =
-      "https://hyfcgiipstcuobjtnyvz.supabase.co";
-
-    /*
-      Танҳо PUBLISHABLE KEY дар frontend иҷозат аст.
-      SERVICE ROLE / SECRET KEY-ро ҳеҷ гоҳ дар index.html нагузоред.
-    */
-    const SUPABASE_PUBLISHABLE_KEY =
-      "sb_publishable_C6rL2SmXOXwU8ZzJoX4z0Q_1OvXGPFu";
-
-    const supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_PUBLISHABLE_KEY
-      );
+        </div>
 
 
-    /* =========================================================
-       LOGIN ACCOUNTS
+        <div class="grid">
 
-       Login + Password дар ин ҷо нигоҳ дошта мешаванд.
-       Password дар экран нишон дода намешавад.
-       ========================================================= */
+            <!-- DIRECTOR -->
 
-    const ACCOUNTS = {
+            <div
+                id="directorPanel"
+                class="card full hidden"
+            >
 
-      director: {
-        login: "director",
-        password: "010100",
-        email: "director@gotomarket.local",
-        role: "director",
-        accountType: "director",
-        title: "Director",
-        icon: "👑"
-      },
+                <h3>👑 Панели Director</h3>
 
-      "sup.1": {
-        login: "sup.1",
-        password: "010101",
-        email: "sup1@gotomarket.local",
-        role: "supervisor",
-        accountType: "supervisor",
-        title: "Supervisor 1",
-        icon: "🧑‍💼"
-      },
+                <div class="form-grid">
 
-      "sup.2": {
-        login: "sup.2",
-        password: "010102",
-        email: "sup2@gotomarket.local",
-        role: "supervisor",
-        accountType: "supervisor",
-        title: "Supervisor 2",
-        icon: "🧑‍💼"
-      }
+                    <div>
+                        <label>Номи мағоза</label>
+                        <input
+                            id="storeName"
+                            type="text"
+                            placeholder="Масалан: Мағозаи Ворис"
+                        >
+                    </div>
 
+                    <div>
+                        <label>Телефон</label>
+                        <input
+                            id="storePhone"
+                            type="text"
+                            placeholder="+992..."
+                        >
+                    </div>
+
+                    <div class="full-field">
+                        <label>Суроға</label>
+                        <input
+                            id="storeAddress"
+                            type="text"
+                            placeholder="Суроғаи мағоза"
+                        >
+                    </div>
+
+                    <div>
+                        <label>Регион</label>
+
+                        <select id="storeRegion">
+                            <option value="">Интихоб кунед</option>
+                            <option value="1">Регион 1</option>
+                            <option value="2">Регион 2</option>
+                            <option value="3">Регион 3</option>
+                            <option value="4">Регион 4</option>
+                            <option value="5">Регион 5</option>
+                            <option value="6">Регион 6</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Сектор</label>
+
+                        <select id="storeSector">
+                            <option value="">Интихоб кунед</option>
+                            <option value="1">Сектор 1</option>
+                            <option value="2">Сектор 2</option>
+                            <option value="3">Сектор 3</option>
+                            <option value="4">Сектор 4</option>
+                            <option value="5">Сектор 5</option>
+                            <option value="6">Сектор 6</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Latitude</label>
+                        <input
+                            id="latitude"
+                            type="number"
+                            step="any"
+                            placeholder="Latitude"
+                        >
+                    </div>
+
+                    <div>
+                        <label>Longitude</label>
+                        <input
+                            id="longitude"
+                            type="number"
+                            step="any"
+                            placeholder="Longitude"
+                        >
+                    </div>
+
+                    <div class="full-field">
+                        <label>Эзоҳ</label>
+                        <textarea
+                            id="storeNotes"
+                            placeholder="Эзоҳ..."
+                        ></textarea>
+                    </div>
+
+                </div>
+
+                <div class="actions">
+
+                    <button
+                        id="locationBtn"
+                        class="secondary"
+                        type="button"
+                    >
+                        📍 Гирифтани ҷойгиршавии ман
+                    </button>
+
+                    <button
+                        id="addStoreBtn"
+                        class="primary"
+                        type="button"
+                    >
+                        ➕ Илова кардани мағоза
+                    </button>
+
+                </div>
+
+                <div
+                    id="storeMessage"
+                    class="message"
+                ></div>
+
+            </div>
+
+
+            <!-- SUPERVISOR -->
+
+            <div
+                id="supervisorPanel"
+                class="card hidden"
+            >
+
+                <h3>🧑‍💼 Панели Supervisor</h3>
+
+                <p style="color:var(--muted);line-height:1.7">
+                    Шумо метавонед рӯйхати мағозаҳои системаро
+                    бинед ва маълумоти ҷойгиршавии онҳоро истифода баред.
+                </p>
+
+            </div>
+
+
+            <!-- SECTOR -->
+
+            <div
+                id="sectorPanel"
+                class="card hidden"
+            >
+
+                <h3>📍 Панели Sector</h3>
+
+                <p
+                    id="sectorInfo"
+                    style="color:var(--muted);line-height:1.7"
+                ></p>
+
+            </div>
+
+
+            <!-- REGION -->
+
+            <div
+                id="regionPanel"
+                class="card hidden"
+            >
+
+                <h3>🗺️ Панели Region</h3>
+
+                <p
+                    id="regionInfo"
+                    style="color:var(--muted);line-height:1.7"
+                ></p>
+
+            </div>
+
+
+            <!-- STORES -->
+
+            <div class="card full">
+
+                <h3>🏪 Рӯйхати мағозаҳо</h3>
+
+                <div
+                    id="storesList"
+                    class="store-list"
+                >
+                    <div class="empty">
+                        Дар ҳоли боргирӣ...
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</section>
+
+
+<script>
+
+/* ========================================================
+   SUPABASE CONFIG
+   ======================================================== */
+
+const SUPABASE_URL =
+    "https://hyfcgiipstcuobjtnyvz.supabase.co";
+
+/*
+ * ИНҶО ФАҚАТ PUBLISHABLE / ANON KEY-РО ГУЗОР.
+ *
+ * sb_secret_... НАГУЗОР.
+ */
+const SUPABASE_ANON_KEY =
+    "YOUR_SUPABASE_PUBLISHABLE_KEY";
+
+
+/* ========================================================
+   STATE
+   ======================================================== */
+
+let currentUser = null;
+let allStores = [];
+
+
+/* ========================================================
+   SUPABASE REQUEST
+   ======================================================== */
+
+async function supabaseRequest(
+    path,
+    options = {}
+){
+
+    const headers = {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization":
+            "Bearer " + SUPABASE_ANON_KEY,
+        "Content-Type":
+            "application/json",
+        ...(options.headers || {})
     };
 
+    const response = await fetch(
+        SUPABASE_URL + path,
+        {
+            ...options,
+            headers
+        }
+    );
 
-    /* =========================
-       ADD SECTORS
-    ========================== */
+    const text = await response.text();
 
-    for (let i = 1; i <= 6; i++) {
+    let data = null;
 
-      const number =
-        String(i);
-
-      ACCOUNTS["sect." + number] = {
-
-        login: "sect." + number,
-
-        password:
-          "02010" + number,
-
-        email:
-          "sect" + number + "@gotomarket.local",
-
-        role:
-          "zayavshik",
-
-        accountType:
-          "sector",
-
-        sectorId:
-          i,
-
-        title:
-          "Сектор " + i,
-
-        icon:
-          "📍"
-
-      };
-
+    try{
+        data = text ? JSON.parse(text) : null;
+    }catch{
+        data = text;
     }
 
+    if(!response.ok){
 
-    /* =========================
-       ADD REGIONS
-    ========================== */
+        let errorText =
+            "Supabase error " +
+            response.status;
 
-    for (let i = 1; i <= 6; i++) {
+        if(data){
 
-      const number =
-        String(i);
-
-      ACCOUNTS["reg." + number] = {
-
-        login:
-          "reg." + number,
-
-        password:
-          "03010" + number,
-
-        email:
-          "reg" + number + "@gotomarket.local",
-
-        role:
-          "zayavshik",
-
-        accountType:
-          "region",
-
-        regionId:
-          i,
-
-        title:
-          "Регион " + i,
-
-        icon:
-          "🌍"
-
-      };
-
-    }
-
-
-    /* =========================================================
-       DOM
-       ========================================================= */
-
-    const loginPage =
-      document.getElementById("loginPage");
-
-    const appPage =
-      document.getElementById("appPage");
-
-    const loginForm =
-      document.getElementById("loginForm");
-
-    const loginInput =
-      document.getElementById("login");
-
-    const passwordInput =
-      document.getElementById("password");
-
-    const loginButton =
-      document.getElementById("loginButton");
-
-    const message =
-      document.getElementById("message");
-
-    const togglePassword =
-      document.getElementById("togglePassword");
-
-    const logoutButton =
-      document.getElementById("logoutButton");
-
-
-    /* =========================================================
-       PASSWORD EYE
-       ========================================================= */
-
-    togglePassword.addEventListener(
-      "click",
-      function () {
-
-        if (
-          passwordInput.type === "password"
-        ) {
-
-          passwordInput.type =
-            "text";
-
-          togglePassword.textContent =
-            "🙈";
-
-        } else {
-
-          passwordInput.type =
-            "password";
-
-          togglePassword.textContent =
-            "👁️";
-
-        
+            if(typeof data === "string"){
+                errorText +=
