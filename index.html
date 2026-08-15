@@ -4,210 +4,455 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>TajNet-AI-X</title>
+  <title>Go to Market</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
     }
 
     body {
-      margin: 0;
       min-height: 100vh;
-      background: linear-gradient(135deg, #111827, #1e3a8a);
+      background:
+        radial-gradient(circle at top left, #2563eb 0, transparent 35%),
+        radial-gradient(circle at bottom right, #16a34a 0, transparent 35%),
+        #07111f;
       color: #111827;
     }
 
-    .container {
-      width: 100%;
-      max-width: 600px;
-      margin: auto;
-      padding: 25px 15px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 24px;
-      padding: 25px;
-      margin-top: 25px;
-      box-shadow: 0 10px 35px rgba(0,0,0,.20);
-    }
-
-    .logo {
-      text-align: center;
-      font-size: 45px;
-    }
-
-    h1 {
-      text-align: center;
-      margin: 8px 0;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #6b7280;
-      margin-bottom: 25px;
-    }
-
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-
+    button,
     input {
-      width: 100%;
-      padding: 16px;
-      border: 2px solid #e5e7eb;
-      border-radius: 13px;
-      font-size: 18px;
-      text-align: center;
-      text-transform: uppercase;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #2563eb;
-    }
-
-    button {
-      width: 100%;
-      padding: 16px;
-      margin-top: 18px;
-      border: 0;
-      border-radius: 13px;
-      background: #2563eb;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    button:disabled {
-      opacity: .6;
-    }
-
-    .logout {
-      background: #dc2626;
-    }
-
-    .message {
-      margin-top: 15px;
-      padding: 14px;
-      border-radius: 12px;
-      display: none;
-      line-height: 1.5;
-    }
-
-    .success {
-      display: block !important;
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .error {
-      display: block !important;
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .info {
-      display: block !important;
-      background: #dbeafe;
-      color: #1e40af;
-    }
-
-    .role {
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    .menu {
-      display: grid;
-      gap: 12px;
-    }
-
-    .menu button {
-      margin-top: 0;
-    }
-
-    .director {
-      background: #111827;
-    }
-
-    .supervisor {
-      background: #7c3aed;
-    }
-
-    .requester {
-      background: #059669;
+      font: inherit;
     }
 
     .hidden {
       display: none !important;
     }
 
-    .store {
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 15px;
-      margin-top: 12px;
+    /* =========================
+       LOGIN
+    ========================= */
+
+    #loginPage {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
 
-    .request {
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 15px;
-      margin-top: 12px;
-    }
-
-    textarea {
+    .login-card {
       width: 100%;
-      min-height: 110px;
-      padding: 14px;
-      border: 2px solid #e5e7eb;
+      max-width: 430px;
+      padding: 32px 25px;
+      border-radius: 28px;
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 25px 70px rgba(0,0,0,.35);
+    }
+
+    .logo {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 18px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg,#2563eb,#16a34a);
+      color: white;
+      font-size: 36px;
+      box-shadow: 0 12px 30px rgba(37,99,235,.35);
+    }
+
+    .login-title {
+      text-align: center;
+      font-size: 29px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .login-subtitle {
+      text-align: center;
+      color: #6b7280;
+      margin-top: 8px;
+      margin-bottom: 25px;
+    }
+
+    .field {
+      margin-top: 17px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #374151;
+    }
+
+    .field input {
+      width: 100%;
+      height: 52px;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      padding: 0 15px;
+      outline: none;
+      background: #f9fafb;
+      transition: .2s;
+    }
+
+    .field input:focus {
+      border-color: #2563eb;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(37,99,235,.10);
+    }
+
+    .login-btn {
+      width: 100%;
+      height: 54px;
+      margin-top: 23px;
+      border: 0;
+      border-radius: 15px;
+      background: linear-gradient(135deg,#2563eb,#16a34a);
+      color: white;
+      font-weight: 800;
+      font-size: 17px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(37,99,235,.25);
+    }
+
+    .login-btn:active {
+      transform: scale(.98);
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 13px;
+      display: none;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .message.success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .message.info {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    /* =========================
+       APP
+    ========================= */
+
+    #app {
+      min-height: 100vh;
+      background: #f3f6fa;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      color: white;
+      padding: 17px;
+      background: linear-gradient(135deg,#111827,#1e3a8a);
+      box-shadow: 0 5px 25px rgba(0,0,0,.15);
+    }
+
+    .topbar-inner {
+      max-width: 1000px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,.14);
+      font-size: 23px;
+    }
+
+    .brand-name {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .role-badge {
+      margin-top: 3px;
+      font-size: 12px;
+      opacity: .8;
+    }
+
+    .logout-btn {
+      border: 0;
       border-radius: 12px;
+      padding: 11px 14px;
+      background: rgba(255,255,255,.13);
+      color: white;
+      cursor: pointer;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 21px;
+      box-shadow: 0 6px 25px rgba(15,23,42,.07);
+      border: 1px solid #edf0f4;
+    }
+
+    .card.full {
+      grid-column: 1 / -1;
+    }
+
+    .card-title {
+      font-size: 19px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      color: #111827;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 17px;
+      border-radius: 16px;
+      background: #f8fafc;
+      text-align: center;
+    }
+
+    .stat-icon {
+      font-size: 24px;
+    }
+
+    .stat-number {
+      font-size: 23px;
+      font-weight: 800;
+      margin-top: 5px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 3px;
+    }
+
+    .item {
+      padding: 15px;
+      border: 1px solid #e5e7eb;
+      border-radius: 15px;
+      margin-top: 10px;
+      background: #fafafa;
+    }
+
+    .item-title {
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .item-info {
+      color: #6b7280;
+      font-size: 14px;
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+
+    .green {
+      color: #15803d;
+    }
+
+    .blue {
+      color: #1d4ed8;
+    }
+
+    .orange {
+      color: #c2410c;
+    }
+
+    .danger {
+      color: #b91c1c;
+    }
+
+    .action-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 12px;
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .start {
+      background: linear-gradient(135deg,#16a34a,#15803d);
+    }
+
+    .finish {
+      background: linear-gradient(135deg,#dc2626,#991b1b);
+    }
+
+    .gps-box {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 12px;
+    }
+
+    .gps-value {
+      padding: 15px;
+      border-radius: 15px;
+      background: #f8fafc;
+    }
+
+    .gps-value small {
+      display: block;
+      color: #6b7280;
+      margin-bottom: 5px;
+    }
+
+    .gps-value strong {
       font-size: 16px;
-      resize: vertical;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #6b7280;
+    }
+
+    @media(max-width:700px) {
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card.full {
+        grid-column: auto;
+      }
+
+      .stat-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .container {
+        padding: 13px;
+      }
+
+      .topbar {
+        padding: 13px;
+      }
+
+      .brand-name {
+        font-size: 17px;
+      }
+
+      .logout-btn {
+        padding: 9px 11px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
+<!-- =========================
+     LOGIN
+========================= -->
 
-  <!-- LOGIN -->
-  <div id="loginPanel" class="card">
+<section id="loginPage">
 
-    <div class="logo">🏪</div>
+  <div class="login-card">
 
-    <h1>TajNet-AI-X</h1>
-
-    <div class="subtitle">
-      Системаи идоракунии мағозаҳо
+    <div class="logo">
+      🛒
     </div>
 
-    <label>
-      🔐 Коди махсус
-    </label>
+    <div class="login-title">
+      Go to Market
+    </div>
 
-    <input
-      id="accessCode"
-      type="text"
-      placeholder="Масалан: DIR-2026-001"
-      autocomplete="off"
-    >
+    <div class="login-subtitle">
+      Ба система ворид шавед
+    </div>
+
+    <div class="field">
+
+      <label>Login</label>
+
+      <input
+        id="login"
+        type="text"
+        autocomplete="username"
+        autocapitalize="none"
+        spellcheck="false"
+      >
+
+    </div>
+
+    <div class="field">
+
+      <label>Парол</label>
+
+      <input
+        id="password"
+        type="password"
+        autocomplete="current-password"
+      >
+
+    </div>
 
     <button
-      id="loginButton"
-      onclick="loginByCode()"
+      class="login-btn"
+      onclick="login()"
     >
-      🔑 Ворид шудан
+      🔐 Ворид шудан
     </button>
 
     <div
@@ -217,175 +462,339 @@
 
   </div>
 
-
-  <!-- DIRECTOR -->
-  <div
-    id="directorPanel"
-    class="card hidden"
-  >
-
-    <div class="role">
-      👨‍💼 Панели директор
-    </div>
-
-    <p>
-      Хуш омадед,
-      <b id="directorName"></b>
-    </p>
-
-    <div class="menu">
-
-      <button
-        class="director"
-        onclick="showStores()"
-      >
-        🏪 Мағозаҳо
-      </button>
-
-      <button
-        class="director"
-        onclick="showStaff()"
-      >
-        👥 Супервайзерҳо ва заявщикҳо
-      </button>
-
-      <button
-        class="director"
-        onclick="showRequests()"
-      >
-        📋 Заявкаҳо
-      </button>
-
-    </div>
-
-    <div id="directorContent"></div>
-
-    <button
-      class="logout"
-      onclick="logout()"
-    >
-      🚪 Баромадан
-    </button>
-
-  </div>
+</section>
 
 
-  <!-- SUPERVISOR -->
-  <div
-    id="supervisorPanel"
-    class="card hidden"
-  >
+<!-- =========================
+     APPLICATION
+========================= -->
 
-    <div class="role">
-      🧑‍💼 Панели супервайзер
-    </div>
+<section
+  id="app"
+  class="hidden"
+>
 
-    <p>
-      Хуш омадед,
-      <b id="supervisorName"></b>
-    </p>
+  <header class="topbar">
 
-    <div class="menu">
+    <div class="topbar-inner">
+
+      <div class="brand">
+
+        <div class="brand-icon">
+          🛒
+        </div>
+
+        <div>
+
+          <div class="brand-name">
+            Go to Market
+          </div>
+
+          <div
+            id="roleText"
+            class="role-badge"
+          >
+          </div>
+
+        </div>
+
+      </div>
 
       <button
-        class="supervisor"
-        onclick="supervisorStores()"
+        class="logout-btn"
+        onclick="logout()"
       >
-        🏪 Мағозаҳо
-      </button>
-
-      <button
-        class="supervisor"
-        onclick="supervisorRequests()"
-      >
-        📋 Заявкаҳо
+        🚪 Баромадан
       </button>
 
     </div>
 
-    <div id="supervisorContent"></div>
-
-    <button
-      class="logout"
-      onclick="logout()"
-    >
-      🚪 Баромадан
-    </button>
-
-  </div>
+  </header>
 
 
-  <!-- REQUESTER -->
-  <div
-    id="requesterPanel"
-    class="card hidden"
-  >
+  <main class="container">
 
-    <div class="role">
-      📝 Панели заявщик
-    </div>
 
-    <p>
-      Хуш омадед,
-      <b id="requesterName"></b>
-    </p>
-
-    <label>
-      Номи заявка
-    </label>
-
-    <input
-      id="requestTitle"
-      type="text"
-      placeholder="Масалан: Дархости мол"
-    >
-
-    <label style="margin-top:18px;">
-      Тавсиф
-    </label>
-
-    <textarea
-      id="requestDescription"
-      placeholder="Маълумоти заявка..."
-    ></textarea>
-
-    <button
-      class="requester"
-      onclick="sendRequest()"
-    >
-      📤 Фиристодани заявка
-    </button>
+    <!-- =========================
+         DIRECTOR
+    ========================= -->
 
     <div
-      id="requestMessage"
-      class="message"
-    ></div>
-
-    <div id="myRequests"></div>
-
-    <button
-      class="logout"
-      onclick="logout()"
+      id="directorPage"
+      class="hidden"
     >
-      🚪 Баромадан
-    </button>
 
-  </div>
+      <div class="dashboard-grid">
 
-</div>
+        <div class="card full">
+
+          <div class="card-title">
+            👨‍💼 Панели директор
+          </div>
+
+          <div class="stat-grid">
+
+            <div class="stat">
+              <div class="stat-icon">🌍</div>
+              <div
+                id="regionCount"
+                class="stat-number"
+              >0</div>
+              <div class="stat-label">
+                Регионҳо
+              </div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-icon">📍</div>
+              <div
+                id="sectorCount"
+                class="stat-number"
+              >0</div>
+              <div class="stat-label">
+                Секторҳо
+              </div>
+            </div>
+
+            <div class="stat">
+              <div class="stat-icon">🏪</div>
+              <div
+                id="storeCount"
+                class="stat-number"
+              >0</div>
+              <div class="stat-label">
+                Мағозаҳо
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            🌍 Регионҳо
+          </div>
+
+          <div
+            id="regions"
+            class="loading"
+          >
+            Бор шуда истодааст...
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            📍 Секторҳо
+          </div>
+
+          <div
+            id="sectors"
+            class="loading"
+          >
+            Бор шуда истодааст...
+          </div>
+
+        </div>
+
+
+        <div class="card full">
+
+          <div class="card-title">
+            🏪 Мағозаҳо
+          </div>
+
+          <div
+            id="stores"
+            class="loading"
+          >
+            Бор шуда истодааст...
+          </div>
+
+        </div>
+
+
+        <div class="card full">
+
+          <div class="card-title">
+            🗺️ Назорати маршрутҳо
+          </div>
+
+          <div
+            id="trips"
+            class="loading"
+          >
+            Бор шуда истодааст...
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         SUPERVISOR
+    ========================= -->
+
+    <div
+      id="supervisorPage"
+      class="hidden"
+    >
+
+      <div class="dashboard-grid">
+
+        <div class="card full">
+
+          <div class="card-title">
+            🧑‍💼 Панели супервайзер
+          </div>
+
+          <div
+            id="supervisorWorkers"
+            class="loading"
+          >
+            Бор шуда истодааст...
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         APPLICANT
+    ========================= -->
+
+    <div
+      id="applicantPage"
+      class="hidden"
+    >
+
+      <div class="dashboard-grid">
+
+        <div class="card full">
+
+          <div class="card-title">
+            📝 Панели заявщик
+          </div>
+
+          <div
+            id="workerInfo"
+            class="item"
+          >
+            Бор шуда истодааст...
+          </div>
+
+        </div>
+
+
+        <div class="card full">
+
+          <div class="card-title">
+            📍 Назорати Location
+          </div>
+
+          <div class="gps-box">
+
+            <div class="gps-value">
+              <small>Latitude</small>
+              <strong id="latitude">—</strong>
+            </div>
+
+            <div class="gps-value">
+              <small>Longitude</small>
+              <strong id="longitude">—</strong>
+            </div>
+
+            <div class="gps-value">
+              <small>Масофа</small>
+              <strong>
+                <span id="distance">0.00</span> км
+              </strong>
+            </div>
+
+            <div class="gps-value">
+              <small>Вақти кор</small>
+              <strong>
+                <span id="workTime">0</span> дақ.
+              </strong>
+            </div>
+
+          </div>
+
+
+          <button
+            id="startButton"
+            class="action-btn start"
+            onclick="startWork()"
+          >
+            ▶️ Оғози кор
+          </button>
+
+
+          <button
+            id="stopButton"
+            class="action-btn finish hidden"
+            onclick="finishWork()"
+          >
+            🏁 Анҷоми кор
+          </button>
+
+
+          <div
+            id="gpsMessage"
+            class="message"
+          ></div>
+
+        </div>
+
+
+        <div class="card full">
+
+          <div class="card-title">
+            🏪 Мағозаҳои территорияи ман
+          </div>
+
+          <div
+            id="workerStores"
+            class="loading"
+          >
+            Бор шуда истодааст...
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</section>
 
 
 <script>
 
-/* =====================================================
-   SUPABASE
-   ===================================================== */
+/* ============================================================
+   SUPABASE CONNECTION
+============================================================ */
 
 const SUPABASE_URL =
   "https://hyfcgiipstcuobjtnyvz.supabase.co";
 
 const SUPABASE_ANON_KEY =
   "sb_publishable_C6rL2SmXOXwU8ZzJoX4z0Q_1OvXGPFu";
+
 
 const supabaseClient =
   supabase.createClient(
@@ -394,69 +803,63 @@ const supabaseClient =
   );
 
 
-/* =====================================================
-   CURRENT STAFF
-   ===================================================== */
+/* ============================================================
+   VARIABLES
+============================================================ */
 
-let currentStaff = null;
+let currentUser = null;
+let currentProfile = null;
+let currentWorker = null;
+let currentTrip = null;
 
-
-/* =====================================================
-   ELEMENTS
-   ===================================================== */
-
-const loginPanel =
-  document.getElementById("loginPanel");
-
-const directorPanel =
-  document.getElementById("directorPanel");
-
-const supervisorPanel =
-  document.getElementById("supervisorPanel");
-
-const requesterPanel =
-  document.getElementById("requesterPanel");
-
-const loginButton =
-  document.getElementById("loginButton");
-
-const loginMessage =
-  document.getElementById("loginMessage");
+let watchId = null;
+let timer = null;
+let workStartedAt = null;
 
 
-/* =====================================================
+/* ============================================================
    MESSAGE
-   ===================================================== */
+============================================================ */
 
-function showMessage(element, text, type) {
+function showMessage(
+  id,
+  text,
+  type
+) {
 
-  element.className =
-    "message " + type;
+  const box =
+    document.getElementById(id);
 
-  element.innerText =
-    text;
+  box.className =
+    "message show " + type;
 
+  box.innerText = text;
 }
 
 
-/* =====================================================
-   LOGIN BY SPECIAL CODE
-   ===================================================== */
+/* ============================================================
+   LOGIN
+============================================================ */
 
-async function loginByCode() {
+async function login() {
 
-  const input =
-    document.getElementById("accessCode");
+  const loginValue =
+    document
+      .getElementById("login")
+      .value
+      .trim();
 
-  const code =
-    input.value.trim().toUpperCase();
+  const password =
+    document
+      .getElementById("password")
+      .value;
 
 
-  if (!code) {
+  if (!loginValue || !password) {
 
     showMessage(
-      loginMessage,
-      "⚠️ Коди махсусро ворид кунед.",
+      "loginMessage",
+      "Login ва паролро ворид кунед.",
       "error"
     );
 
@@ -464,513 +867,39 @@ async function loginByCode() {
   }
 
 
-  loginButton.disabled = true;
-
-  loginButton.innerText =
-    "⏳ Санҷида истодааст...";
-
-
   showMessage(
-    loginMessage,
-    "⏳ Код санҷида шуда истодааст...",
+    "loginMessage",
+    "⏳ Санҷиш...",
     "info"
   );
 
 
-  try {
+  /*
+    Login дар система ҳамчун username
+    истифода мешавад.
 
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .rpc(
-          "check_access_code",
-          {
-            entered_code: code
-          }
-        );
+    Барои Supabase Auth бояд login
+    ба email-и дохилии аккаунт
+    мувофиқ карда шавад.
+  */
 
 
-    if (error) {
-
-      console.error(error);
-
-      showMessage(
-        loginMessage,
-        "❌ Хатои Supabase: " +
-        error.message,
-        "error"
-      );
-
-      return;
-    }
+  const {
+    data: account,
+    error: accountError
+  } =
+    await supabaseClient
+      .from("login_accounts")
+      .select("email")
+      .eq("login", loginValue)
+      .maybeSingle();
 
 
-    if (!data || data.length === 0) {
-
-      showMessage(
-        loginMessage,
-        "⛔ Код нодуруст аст ё ғайрифаъол мебошад.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    currentStaff =
-      data[0];
-
-
-    localStorage.setItem(
-      "tajnet_staff",
-      JSON.stringify(currentStaff)
-    );
-
-
-    loginPanel.classList.add("hidden");
-
-
-    openRolePanel();
-
-
-  }
-
-  catch (error) {
-
-    console.error(error);
+  if (accountError || !account) {
 
     showMessage(
-      loginMessage,
-      "❌ Хато: " +
-      error.message,
-      "error"
-    );
-
-  }
-
-  finally {
-
-    loginButton.disabled = false;
-
-    loginButton.innerText =
-      "🔑 Ворид шудан";
-
-  }
-
-}
-
-
-/* =====================================================
-   OPEN ROLE PANEL
-   ===================================================== */
-
-function openRolePanel() {
-
-  directorPanel.classList.add("hidden");
-
-  supervisorPanel.classList.add("hidden");
-
-  requesterPanel.classList.add("hidden");
-
-
-  if (!currentStaff) {
-
-    loginPanel.classList.remove("hidden");
-
-    return;
-  }
-
-
-  if (
-    currentStaff.role ===
-    "director"
-  ) {
-
-    document
-      .getElementById("directorName")
-      .innerText =
-      currentStaff.full_name;
-
-    directorPanel.classList.remove("hidden");
-
-    showStores();
-
-  }
-
-
-  else if (
-    currentStaff.role ===
-    "supervisor"
-  ) {
-
-    document
-      .getElementById("supervisorName")
-      .innerText =
-      currentStaff.full_name;
-
-    supervisorPanel.classList.remove("hidden");
-
-    supervisorStores();
-
-  }
-
-
-  else if (
-    currentStaff.role ===
-    "requester"
-  ) {
-
-    document
-      .getElementById("requesterName")
-      .innerText =
-      currentStaff.full_name;
-
-    requesterPanel.classList.remove("hidden");
-
-    loadMyRequests();
-
-  }
-
-}
-
-
-/* =====================================================
-   DIRECTOR — STORES
-   ===================================================== */
-
-async function showStores() {
-
-  const box =
-    document.getElementById(
-      "directorContent"
-    );
-
-  box.innerHTML =
-    "<p>⏳ Мағозаҳо...</p>";
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("stores")
-      .select(
-        "id,name,address,latitude,longitude"
-      )
-      .order(
-        "id",
-        {
-          ascending: false
-        }
-      );
-
-
-  if (error) {
-
-    box.innerHTML =
-      "❌ " +
-      escapeHtml(
-        error.message
-      );
-
-    return;
-  }
-
-
-  if (!data.length) {
-
-    box.innerHTML =
-      "<p>Ҳоло мағоза нест.</p>";
-
-    return;
-  }
-
-
-  box.innerHTML =
-    "<h3>🏪 Рӯйхати мағозаҳо</h3>";
-
-
-  data.forEach(store => {
-
-    const div =
-      document.createElement("div");
-
-    div.className =
-      "store";
-
-
-    div.innerHTML = `
-
-      <b>🏪 ${escapeHtml(store.name)}</b>
-
-      <br><br>
-
-      📍 ${escapeHtml(
-        store.address || ""
-      )}
-
-      <br><br>
-
-      🌐 ${store.latitude},
-      ${store.longitude}
-
-    `;
-
-
-    box.appendChild(div);
-
-  });
-
-}
-
-
-/* =====================================================
-   DIRECTOR — STAFF
-   ===================================================== */
-
-async function showStaff() {
-
-  const box =
-    document.getElementById(
-      "directorContent"
-    );
-
-  box.innerHTML =
-    "<p>⏳ Корбарон...</p>";
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("staff")
-      .select(
-        "full_name,role,access_code,active"
-      )
-      .order(
-        "created_at",
-        {
-          ascending: false
-        }
-      );
-
-
-  if (error) {
-
-    box.innerHTML =
-      "❌ " +
-      escapeHtml(
-        error.message
-      );
-
-    return;
-  }
-
-
-  box.innerHTML =
-    "<h3>👥 Корбарон</h3>";
-
-
-  data.forEach(person => {
-
-    const div =
-      document.createElement("div");
-
-    div.className =
-      "store";
-
-
-    div.innerHTML = `
-
-      <b>
-        ${roleName(person.role)}
-      </b>
-
-      <br><br>
-
-      👤 ${escapeHtml(person.full_name)}
-
-      <br>
-
-      🔑 Код:
-      <b>${escapeHtml(person.access_code)}</b>
-
-      <br>
-
-      ${person.active ? "🟢 Фаъол" : "🔴 Ғайрифаъол"}
-
-    `;
-
-
-    box.appendChild(div);
-
-  });
-
-}
-
-
-/* =====================================================
-   DIRECTOR — REQUESTS
-   ===================================================== */
-
-async function showRequests() {
-
-  const box =
-    document.getElementById(
-      "directorContent"
-    );
-
-  box.innerHTML =
-    "<p>⏳ Заявкаҳо...</p>";
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("requests")
-      .select("*")
-      .order(
-        "created_at",
-        {
-          ascending: false
-        }
-      );
-
-
-  if (error) {
-
-    box.innerHTML =
-      "❌ " +
-      escapeHtml(
-        error.message
-      );
-
-    return;
-  }
-
-
-  if (!data.length) {
-
-    box.innerHTML =
-      "<p>Ҳоло заявка нест.</p>";
-
-    return;
-  }
-
-
-  box.innerHTML =
-    "<h3>📋 Заявкаҳо</h3>";
-
-
-  data.forEach(request => {
-
-    const div =
-      document.createElement("div");
-
-    div.className =
-      "request";
-
-
-    div.innerHTML = `
-
-      <b>
-        ${escapeHtml(request.title)}
-      </b>
-
-      <br><br>
-
-      ${escapeHtml(
-        request.description || ""
-      )}
-
-      <br><br>
-
-      📌 Статус:
-      <b>${escapeHtml(request.status)}</b>
-
-    `;
-
-
-    box.appendChild(div);
-
-  });
-
-}
-
-
-/* =====================================================
-   SUPERVISOR — STORES
-   ===================================================== */
-
-async function supervisorStores() {
-
-  const box =
-    document.getElementById(
-      "supervisorContent"
-    );
-
-  box.innerHTML =
-    "<h3>🏪 Мағозаҳо</h3>" +
-    "<p>Рӯйхати мағозаҳо дар ин ҷо нишон дода мешавад.</p>";
-
-}
-
-
-/* =====================================================
-   SUPERVISOR — REQUESTS
-   ===================================================== */
-
-async function supervisorRequests() {
-
-  const box =
-    document.getElementById(
-      "supervisorContent"
-    );
-
-  box.innerHTML =
-    "<h3>📋 Заявкаҳо</h3>" +
-    "<p>Заявкаҳои вобаста ба супервайзер дар ин ҷо нишон дода мешаванд.</p>";
-
-}
-
-
-/* =====================================================
-   REQUESTER — SEND REQUEST
-   ===================================================== */
-
-async function sendRequest() {
-
-  const title =
-    document
-      .getElementById("requestTitle")
-      .value
-      .trim();
-
-
-  const description =
-    document
-      .getElementById("requestDescription")
-      .value
-      .trim();
-
-
-  const msg =
-    document.getElementById(
-      "requestMessage"
-    );
-
-
-  if (!title) {
-
-    showMessage(
-      msg,
-      "⚠️ Номи заявкаро ворид кунед.",
+      "loginMessage",
+      "❌ Login ё парол нодуруст аст.",
       "error"
     );
 
@@ -979,23 +908,17 @@ async function sendRequest() {
 
 
   const {
+    data,
     error
   } =
-    await supabaseClient
-      .from("requests")
-      .insert({
+    await supabaseClient.auth
+      .signInWithPassword({
 
-        requester_name:
-          currentStaff.full_name,
+        email:
+          account.email,
 
-        requester_id:
-          currentStaff.staff_id,
-
-        title:
-          title,
-
-        description:
-          description
+        password:
+          password
 
       });
 
@@ -1003,8 +926,8 @@ async function sendRequest() {
   if (error) {
 
     showMessage(
-      msg,
-      "❌ " + error.message,
+      "loginMessage",
+      "❌ Login ё парол нодуруст аст.",
       "error"
     );
 
@@ -1012,39 +935,150 @@ async function sendRequest() {
   }
 
 
-  showMessage(
-    msg,
-    "✅ Заявка фиристода шуд.",
-    "success"
-  );
+  currentUser =
+    data.user;
 
 
-  document
-    .getElementById("requestTitle")
-    .value = "";
-
-  document
-    .getElementById("requestDescription")
-    .value = "";
-
-
-  loadMyRequests();
+  await loadProfile();
 
 }
 
 
-/* =====================================================
-   REQUESTER — MY REQUESTS
-   ===================================================== */
+/* ============================================================
+   PROFILE
+============================================================ */
 
-async function loadMyRequests() {
+async function loadProfile() {
 
-  if (!currentStaff) return;
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq(
+        "id",
+        currentUser.id
+      )
+      .single();
 
+
+  if (error || !data) {
+
+    showMessage(
+      "loginMessage",
+      "❌ Профили аккаунт ёфт нашуд.",
+      "error"
+    );
+
+    await supabaseClient.auth.signOut();
+
+    return;
+  }
+
+
+  currentProfile =
+    data;
+
+
+  document
+    .getElementById("loginPage")
+    .classList.add("hidden");
+
+
+  document
+    .getElementById("app")
+    .classList.remove("hidden");
+
+
+  if (
+    data.role ===
+    "director"
+  ) {
+
+    document
+      .getElementById("roleText")
+      .innerText =
+      "Директор";
+
+    await openDirector();
+
+  }
+
+  else if (
+    data.role ===
+    "supervisor"
+  ) {
+
+    document
+      .getElementById("roleText")
+      .innerText =
+      "Супервайзер";
+
+    await openSupervisor();
+
+  }
+
+  else if (
+    data.role ===
+    "applicant"
+  ) {
+
+    document
+      .getElementById("roleText")
+      .innerText =
+      "Заявщик";
+
+    await openApplicant();
+
+  }
+
+  else {
+
+    alert(
+      "Нақши аккаунт муайян нашуд."
+    );
+
+    await logout();
+
+  }
+
+}
+
+
+/* ============================================================
+   DIRECTOR
+============================================================ */
+
+async function openDirector() {
+
+  document
+    .getElementById(
+      "directorPage"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+
+  await loadRegions();
+  await loadSectors();
+  await loadStores();
+  await loadTrips();
+
+}
+
+
+/* ============================================================
+   REGIONS
+============================================================ */
+
+async function loadRegions() {
 
   const box =
     document.getElementById(
-      "myRequests"
+      "regions"
     );
 
 
@@ -1053,191 +1087,153 @@ async function loadMyRequests() {
     error
   } =
     await supabaseClient
-      .from("requests")
+      .from("regions")
       .select("*")
-      .eq(
-        "requester_name",
-        currentStaff.full_name
-      )
-      .order(
-        "created_at",
-        {
-          ascending: false
-        }
-      );
+      .order("name");
 
 
   if (error) {
 
-    box.innerHTML =
-      "❌ " +
-      escapeHtml(
-        error.message
-      );
+    box.innerText =
+      "❌ " + error.message;
 
     return;
   }
-
-
-  box.innerHTML =
-    "<h3 style='margin-top:30px;'>📋 Заявкаҳои ман</h3>";
-
-
-  if (!data.length) {
-
-    box.innerHTML +=
-      "<p>Ҳоло заявка надоред.</p>";
-
-    return;
-  }
-
-
-  data.forEach(request => {
-
-    const div =
-      document.createElement("div");
-
-    div.className =
-      "request";
-
-
-    div.innerHTML = `
-
-      <b>
-        ${escapeHtml(request.title)}
-      </b>
-
-      <br><br>
-
-      ${escapeHtml(
-        request.description || ""
-      )}
-
-      <br><br>
-
-      📌 Статус:
-      <b>${escapeHtml(request.status)}</b>
-
-    `;
-
-
-    box.appendChild(div);
-
-  });
-
-}
-
-
-/* =====================================================
-   ROLE NAME
-   ===================================================== */
-
-function roleName(role) {
-
-  if (role === "director")
-    return "👨‍💼 Директор";
-
-  if (role === "supervisor")
-    return "🧑‍💼 Супервайзер";
-
-  if (role === "requester")
-    return "📝 Заявщик";
-
-  return role;
-
-}
-
-
-/* =====================================================
-   LOGOUT
-   ===================================================== */
-
-function logout() {
-
-  currentStaff = null;
-
-  localStorage.removeItem(
-    "tajnet_staff"
-  );
-
-
-  directorPanel.classList.add("hidden");
-
-  supervisorPanel.classList.add("hidden");
-
-  requesterPanel.classList.add("hidden");
-
-  loginPanel.classList.remove("hidden");
 
 
   document
-    .getElementById("accessCode")
-    .value = "";
+    .getElementById(
+      "regionCount"
+    )
+    .innerText =
+    data?.length || 0;
 
 
-  loginMessage.className =
-    "message";
+  if (
+    !data ||
+    data.length === 0
+  ) {
 
-  loginMessage.style.display =
-    "none";
+    box.innerText =
+      "Ҳоло регион нест.";
 
-}
-
-
-/* =====================================================
-   ESCAPE HTML
-   ===================================================== */
-
-function escapeHtml(text) {
-
-  const div =
-    document.createElement("div");
-
-  div.textContent =
-    text == null
-      ? ""
-      : String(text);
-
-  return div.innerHTML;
-
-}
-
-
-/* =====================================================
-   RESTORE LOGIN
-   ===================================================== */
-
-try {
-
-  const saved =
-    localStorage.getItem(
-      "tajnet_staff"
-    );
-
-
-  if (saved) {
-
-    currentStaff =
-      JSON.parse(saved);
-
-    loginPanel.classList.add(
-      "hidden"
-    );
-
-    openRolePanel();
-
+    return;
   }
 
-}
-catch (error) {
 
-  localStorage.removeItem(
-    "tajnet_staff"
+  box.innerHTML = "";
+
+
+  data.forEach(
+    region => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "item";
+
+      div.innerHTML = `
+        <div class="item-title">
+          🌍 ${escapeHtml(
+            region.name
+          )}
+        </div>
+      `;
+
+      box.appendChild(div);
+
+    }
   );
 
 }
 
-</script>
 
-</body>
-  </html>
+/* ============================================================
+   SECTORS
+============================================================ */
+
+async function loadSectors() {
+
+  const box =
+    document.getElementById(
+      "sectors"
+    );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("sectors")
+      .select("*")
+      .order("name");
+
+
+  if (error) {
+
+    box.innerText =
+      "❌ " + error.message;
+
+    return;
+  }
+
+
+  document
+    .getElementById(
+      "sectorCount"
+    )
+    .innerText =
+    data?.length || 0;
+
+
+  if (
+    !data ||
+    data.length === 0
+  ) {
+
+    box.innerText =
+      "Ҳоло сектор нест.";
+
+    return;
+  }
+
+
+  box.innerHTML = "";
+
+
+  data.forEach(
+    sector => {
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "item";
+
+      div.innerHTML = `
+        <div class="item-title">
+          📍 ${escapeHtml(
+            sector.name
+          )}
+        </div>
+      `;
+
+      box.appendChild(div);
+
+    }
+  );
+
+}
+
+
+/* ============================================================
+   STORES
+============================================================ */
+
+async function loadStor
