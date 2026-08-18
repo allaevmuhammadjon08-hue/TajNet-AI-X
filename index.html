@@ -1012,91 +1012,81 @@ async function loginUser(login,password){
    LOGIN
 ========================================================= */
 
-loginForm.addEventListener(
-  "submit",
-  async function(event){
+async function loginUser(login, password){
 
-    event.preventDefault();
+  return await supabaseRequest(
+    "/rest/v1/rpc/login_user",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        p_login: login,
+        p_password: password
+      })
+    }
+  );
+}
 
-    const login =
-      loginInput.value.trim();
 
-    const password =
-      passwordInput.value;
+loginForm.addEventListener("submit", async function(event){
 
-    if(!login || !password){
+  event.preventDefault();
+
+  const login = loginInput.value.trim();
+  const password = passwordInput.value;
+
+  if(!login || !password){
+    showLoginMessage(
+      "❌ Login ва паролро пур кунед.",
+      "error"
+    );
+    return;
+  }
+
+  loginButton.disabled = true;
+  loginButton.textContent = "⏳ Санҷида истодааст...";
+
+  try {
+
+    const result = await loginUser(login, password);
+
+    console.log("LOGIN RESULT:", result);
+
+    if(!Array.isArray(result) || result.length === 0){
 
       showLoginMessage(
-        "Login ва паролро пур кунед.",
+        "❌ Login ё парол нодуруст аст.",
         "error"
       );
+
+      loginButton.disabled = false;
+      loginButton.textContent = "🔑 Ворид шудан";
 
       return;
     }
 
-    loginButton.disabled = true;
+    currentUser = result[0];
 
-    loginButton.textContent =
-      "⏳ Санҷида истодааст...";
+    localStorage.setItem(
+      "gotomarket_current_user",
+      JSON.stringify(currentUser)
+    );
 
-    loginMessage.textContent = "";
-    loginMessage.className = "";
+    await openApp();
 
-    try{
+  } catch(error){
 
-      const result =
-        await loginUser(
-          login,
-          password
-        );
+    console.error("LOGIN ERROR:", error);
 
-      if(
-        !Array.isArray(result) ||
-        result.length === 0
-      ){
+    showLoginMessage(
+      "❌ Хатои Supabase: " + error.message,
+      "error"
+    );
 
-        showLoginMessage(
-          "❌ Login ё парол нодуруст аст.",
-          "error"
-        );
-
-        return;
-      }
-
-      currentUser = result[0];
-
-      localStorage.setItem(
-        "gotomarket_current_user",
-        JSON.stringify(currentUser)
-      );
-
-      passwordInput.value = "";
-
-      await openApp();
-
-    }catch(error){
-
-      console.error(error);
-
-      showLoginMessage(
-        "❌ Пайвастшавӣ ба Supabase ноком шуд. " +
-        error.message,
-        "error"
-      );
-
-    }finally{
-
-      loginButton.disabled = false;
-
-      loginButton.textContent =
-        "🔑 Ворид шудан";
-
-    }
-
+    loginButton.disabled = false;
+    loginButton.textContent = "🔑 Ворид шудан";
   }
-);
 
-
+});
 /* =========================================================
    LOGIN MESSAGE
 ========================================================= */
