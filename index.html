@@ -10,33 +10,26 @@
 *{box-sizing:border-box;margin:0;padding:0}
 
 :root{
-  --bg:#070914;
-  --bg2:#0d1224;
-  --card:rgba(18,24,45,.78);
-  --card2:rgba(25,32,58,.9);
+  --bg:#060914;
+  --card:rgba(16,23,43,.88);
   --text:#f8fafc;
   --muted:#94a3b8;
   --line:rgba(255,255,255,.09);
   --purple:#8b5cf6;
-  --blue:#3b82f6;
-  --cyan:#06b6d4;
+  --blue:#2563eb;
   --green:#22c55e;
   --red:#ef4444;
-  --yellow:#f59e0b;
 }
 
-html{scroll-behavior:smooth}
+html,body{min-height:100%}
 
 body{
-  min-height:100vh;
   color:var(--text);
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,
-  "Segoe UI",Arial,sans-serif;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
   background:
-    radial-gradient(circle at 10% 0%,rgba(139,92,246,.22),transparent 30%),
-    radial-gradient(circle at 90% 10%,rgba(59,130,246,.18),transparent 28%),
-    radial-gradient(circle at 50% 100%,rgba(6,182,212,.08),transparent 35%),
-    linear-gradient(145deg,#050711,#0b1020 50%,#050711);
+    radial-gradient(circle at 10% 5%,rgba(139,92,246,.22),transparent 30%),
+    radial-gradient(circle at 90% 10%,rgba(37,99,235,.20),transparent 30%),
+    linear-gradient(145deg,#050711,#0b1120 55%,#050711);
 }
 
 button,input,textarea,select{font:inherit}
@@ -57,51 +50,44 @@ button{cursor:pointer}
   width:min(450px,100%);
 }
 
-.brand-top{
+.logo-area{
   text-align:center;
-  margin-bottom:24px;
+  margin-bottom:25px;
 }
 
 .logo{
   width:88px;
   height:88px;
-  margin:0 auto 16px;
+  margin:auto auto 15px;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:27px;
-  font-size:40px;
-  background:
-    linear-gradient(135deg,var(--purple),var(--blue));
-  box-shadow:
-    0 20px 60px rgba(99,102,241,.35),
-    inset 0 1px 0 rgba(255,255,255,.2);
+  border-radius:26px;
+  font-size:42px;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  box-shadow:0 20px 60px rgba(79,70,229,.4);
 }
 
-.brand-top h1{
+.logo-area h1{
   font-size:34px;
-  font-weight:950;
-  letter-spacing:-1px;
+  font-weight:900;
 }
 
-.brand-top p{
-  margin-top:7px;
+.logo-area p{
   color:var(--muted);
-  font-size:14px;
+  margin-top:7px;
 }
 
 .login-card{
-  padding:30px;
+  padding:28px;
   border:1px solid var(--line);
   border-radius:28px;
-  background:rgba(12,17,34,.84);
-  box-shadow:0 35px 100px rgba(0,0,0,.5);
-  backdrop-filter:blur(25px);
+  background:rgba(12,17,34,.9);
+  box-shadow:0 30px 90px rgba(0,0,0,.5);
+  backdrop-filter:blur(20px);
 }
 
-.login-title{
-  font-size:21px;
-  font-weight:900;
+.login-card h2{
   margin-bottom:22px;
 }
 
@@ -117,35 +103,23 @@ label{
   font-weight:800;
 }
 
-.input-wrap{
-  position:relative;
-}
-
 input,textarea,select{
   width:100%;
   color:#fff;
   background:#080d1b;
   border:1px solid var(--line);
-  border-radius:15px;
-  padding:14px 15px;
+  border-radius:14px;
+  padding:14px;
   outline:none;
-  transition:.2s;
 }
 
-input::placeholder,
-textarea::placeholder{
-  color:#64748b;
-}
-
-input:focus,
-textarea:focus,
-select:focus{
-  border-color:rgba(139,92,246,.8);
-  box-shadow:0 0 0 4px rgba(139,92,246,.11);
+input:focus,textarea:focus,select:focus{
+  border-color:#8b5cf6;
+  box-shadow:0 0 0 4px rgba(139,92,246,.12);
 }
 
 select option{
-  background:#0b1020;
+  background:#0b1120;
   color:#fff;
 }
 
@@ -153,27 +127,18 @@ select option{
 .primary-btn{
   width:100%;
   border:0;
-  color:#fff;
   border-radius:15px;
   padding:15px;
+  color:#fff;
   font-weight:900;
-  background:
-    linear-gradient(135deg,var(--purple),var(--blue));
-  box-shadow:0 16px 35px rgba(79,70,229,.25);
-  transition:.2s;
-}
-
-.login-btn:hover,
-.primary-btn:hover{
-  transform:translateY(-1px);
-  filter:brightness(1.08);
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  box-shadow:0 15px 35px rgba(79,70,229,.25);
 }
 
 .login-btn:disabled,
 .primary-btn:disabled{
   opacity:.6;
   cursor:not-allowed;
-  transform:none;
 }
 
 .message{
@@ -184,22 +149,22 @@ select option{
   line-height:1.5;
 }
 
-.error{
+.message.error{
   color:#fecaca;
-  background:rgba(239,68,68,.1);
+  background:rgba(239,68,68,.10);
   border:1px solid rgba(239,68,68,.25);
 }
 
-.success{
+.message.success{
   color:#bbf7d0;
-  background:rgba(34,197,94,.1);
+  background:rgba(34,197,94,.10);
   border:1px solid rgba(34,197,94,.25);
 }
 
-.info-msg{
+.message.info{
   color:#bfdbfe;
-  background:rgba(59,130,246,.1);
-  border:1px solid rgba(59,130,246,.2);
+  background:rgba(37,99,235,.10);
+  border:1px solid rgba(37,99,235,.25);
 }
 
 /* ================= APP ================= */
@@ -209,25 +174,25 @@ select option{
 }
 
 .topbar{
+  height:74px;
   position:sticky;
   top:0;
   z-index:50;
-  height:74px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding:0 24px;
+  background:rgba(5,8,20,.82);
   border-bottom:1px solid var(--line);
-  background:rgba(5,8,20,.78);
-  backdrop-filter:blur(20px);
+  backdrop-filter:blur(18px);
 }
 
 .brand{
   display:flex;
   align-items:center;
-  gap:11px;
-  font-weight:950;
+  gap:10px;
   font-size:19px;
+  font-weight:900;
 }
 
 .brand-icon{
@@ -238,7 +203,6 @@ select option{
   justify-content:center;
   border-radius:13px;
   background:linear-gradient(135deg,var(--purple),var(--blue));
-  box-shadow:0 10px 25px rgba(79,70,229,.25);
 }
 
 .user-box{
@@ -253,7 +217,6 @@ select option{
 
 .user-info strong{
   display:block;
-  font-size:14px;
 }
 
 .user-info small{
@@ -266,14 +229,9 @@ select option{
   border:1px solid var(--line);
   color:#fff;
   background:rgba(255,255,255,.05);
-  border-radius:12px;
   padding:10px 14px;
+  border-radius:12px;
   font-weight:700;
-}
-
-.logout:hover{
-  background:rgba(239,68,68,.12);
-  border-color:rgba(239,68,68,.3);
 }
 
 .container{
@@ -288,8 +246,7 @@ select option{
 
 .hero h1{
   font-size:32px;
-  font-weight:950;
-  letter-spacing:-.7px;
+  font-weight:900;
 }
 
 .hero p{
@@ -309,7 +266,6 @@ select option{
   border:1px solid var(--line);
   border-radius:20px;
   background:var(--card);
-  backdrop-filter:blur(15px);
 }
 
 .stat-icon{
@@ -319,7 +275,7 @@ select option{
 
 .stat-value{
   font-size:26px;
-  font-weight:950;
+  font-weight:900;
 }
 
 .stat-label{
@@ -339,7 +295,6 @@ select option{
   border:1px solid var(--line);
   border-radius:22px;
   background:var(--card);
-  backdrop-filter:blur(15px);
 }
 
 .full{
@@ -347,8 +302,7 @@ select option{
 }
 
 .card h2{
-  font-size:18px;
-  font-weight:900;
+  font-size:19px;
   margin-bottom:15px;
 }
 
@@ -357,17 +311,26 @@ select option{
   line-height:1.8;
 }
 
-.role-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  padding:8px 11px;
-  border-radius:12px;
-  background:rgba(139,92,246,.11);
-  border:1px solid rgba(139,92,246,.2);
-  color:#ddd6fe;
+.notice{
+  margin-bottom:16px;
+  padding:13px 15px;
+  border-radius:13px;
+  color:#bfdbfe;
+  background:rgba(37,99,235,.09);
+  border:1px solid rgba(37,99,235,.18);
+  line-height:1.6;
   font-size:13px;
+}
+
+.role-badge{
+  display:inline-block;
+  padding:8px 11px;
+  border-radius:10px;
+  color:#ddd6fe;
+  background:rgba(139,92,246,.12);
+  border:1px solid rgba(139,92,246,.2);
   font-weight:800;
+  font-size:13px;
 }
 
 .form-grid{
@@ -393,11 +356,7 @@ select option{
   background:rgba(255,255,255,.05);
   border-radius:13px;
   padding:12px 15px;
-  font-weight:750;
-}
-
-.secondary-btn:hover{
-  background:rgba(255,255,255,.09);
+  font-weight:800;
 }
 
 .small-primary{
@@ -423,8 +382,8 @@ select option{
 
 .store-head{
   display:flex;
-  align-items:flex-start;
   justify-content:space-between;
+  align-items:flex-start;
   gap:12px;
 }
 
@@ -434,8 +393,8 @@ select option{
 }
 
 .store-icon{
-  width:38px;
-  height:38px;
+  width:40px;
+  height:40px;
   flex:none;
   display:flex;
   align-items:center;
@@ -460,26 +419,22 @@ select option{
   display:inline-flex;
   align-items:center;
   gap:5px;
-  color:#bfdbfe;
   text-decoration:none;
-  background:rgba(59,130,246,.1);
-  border:1px solid rgba(59,130,246,.22);
+  color:#bfdbfe;
+  background:rgba(37,99,235,.10);
+  border:1px solid rgba(37,99,235,.22);
   padding:8px 10px;
   border-radius:10px;
-  white-space:nowrap;
   font-size:12px;
   font-weight:800;
-}
-
-.map-btn:hover{
-  background:rgba(59,130,246,.18);
+  white-space:nowrap;
 }
 
 .store-meta{
   display:flex;
   flex-wrap:wrap;
   gap:7px;
-  margin-top:10px;
+  margin-top:11px;
 }
 
 .tag{
@@ -491,27 +446,10 @@ select option{
   border:1px solid var(--line);
 }
 
-.empty{
+.empty,.loading{
   padding:28px;
   text-align:center;
   color:var(--muted);
-}
-
-.loading{
-  padding:25px;
-  text-align:center;
-  color:var(--muted);
-}
-
-.section-note{
-  padding:12px 14px;
-  margin-bottom:15px;
-  border-radius:13px;
-  background:rgba(59,130,246,.08);
-  border:1px solid rgba(59,130,246,.15);
-  color:#bfdbfe;
-  font-size:13px;
-  line-height:1.6;
 }
 
 /* ================= MOBILE ================= */
@@ -557,10 +495,6 @@ select option{
     font-size:25px;
   }
 
-  .stats{
-    gap:8px;
-  }
-
   .stat{
     padding:14px;
   }
@@ -585,16 +519,8 @@ select option{
     flex-direction:column;
   }
 
-  .map-btn{
-    width:max-content;
-  }
-
   .login-card{
     padding:22px;
-  }
-
-  .brand-top h1{
-    font-size:29px;
   }
 }
 </style>
@@ -604,13 +530,13 @@ select option{
 
 <!-- =====================================================
      LOGIN
-====================================================== -->
+===================================================== -->
 
 <section id="loginPage">
 
   <div class="login-wrap">
 
-    <div class="brand-top">
+    <div class="logo-area">
       <div class="logo">🛍️</div>
       <h1>Go to Market</h1>
       <p>Системаи идоракунии мағозаҳо</p>
@@ -618,9 +544,7 @@ select option{
 
     <div class="login-card">
 
-      <div class="login-title">
-        🔐 Воридшавӣ
-      </div>
+      <h2>🔐 Воридшавӣ</h2>
 
       <form id="loginForm">
 
@@ -667,7 +591,7 @@ select option{
 
 <!-- =====================================================
      APP
-====================================================== -->
+===================================================== -->
 
 <section id="appPage" class="hidden">
 
@@ -706,8 +630,6 @@ select option{
     </div>
 
 
-    <!-- STATS -->
-
     <div class="stats">
 
       <div class="stat">
@@ -718,13 +640,13 @@ select option{
 
       <div class="stat">
         <div class="stat-icon">🗺️</div>
-        <div id="regionCount" class="stat-value">6</div>
+        <div class="stat-value">6</div>
         <div class="stat-label">Регионҳо</div>
       </div>
 
       <div class="stat">
         <div class="stat-icon">📍</div>
-        <div id="sectorCount" class="stat-value">6</div>
+        <div class="stat-value">6</div>
         <div class="stat-label">Секторҳо</div>
       </div>
 
@@ -748,9 +670,9 @@ select option{
 
         <h2>👑 Кабинети Director</h2>
 
-        <div class="section-note">
-          Аз ин ҷо шумо метавонед мағозаи нав илова кунед.
-          Ҷойгиршавиро метавонед бо GPS автоматӣ гиред.
+        <div class="notice">
+          Дар ин кабинет Director метавонад мағоза илова кунад.
+          GPS ҷойгиршавии ҷорӣро автоматӣ мегирад.
         </div>
 
         <div class="form-grid">
@@ -873,9 +795,13 @@ select option{
 
         <h2>🧑‍💼 Кабинети Supervisor</h2>
 
-        <p class="info">
+        <div class="role-badge">
+          🧑‍💼 Supervisor
+        </div>
+
+        <p class="info" style="margin-top:14px">
           Шумо ҳамчун Supervisor ворид шудед.
-          Маълумоти мағозаҳо дар поён намоиш дода мешавад.
+          Мағозаҳо ва маълумоти система дар поён нишон дода мешаванд.
         </p>
 
       </div>
@@ -921,12 +847,9 @@ select option{
 
         <h2>🏪 Мағозаҳо</h2>
 
-        <div
-          id="storeList"
-          class="store-list"
-        >
+        <div id="storeList">
           <div class="loading">
-            Дар ҳоли боркунӣ...
+            ⏳ Мағозаҳо бор шуда истодаанд...
           </div>
         </div>
 
@@ -940,6 +863,7 @@ select option{
 
 
 <script>
+
 /* =========================================================
    GO TO MARKET
    SUPABASE CONFIG
@@ -1002,15 +926,13 @@ const storeMessage =
    SUPABASE REQUEST
 ========================================================= */
 
-async function supabaseRequest(
-  path,
-  options = {}
-){
+async function supabaseRequest(path,options={}){
 
   const headers = {
-    "apikey": SUPABASE_KEY,
-    "Authorization": "Bearer " + SUPABASE_KEY,
-    "Content-Type": "application/json",
+    "apikey":SUPABASE_KEY,
+    "Authorization":"Bearer " + SUPABASE_KEY,
+    "Content-Type":"application/json",
+    "Accept":"application/json",
     ...(options.headers || {})
   };
 
@@ -1028,10 +950,14 @@ async function supabaseRequest(
 
   let data = null;
 
-  try{
-    data = text ? JSON.parse(text) : null;
-  }catch{
-    data = text;
+  if(text){
+
+    try{
+      data = JSON.parse(text);
+    }catch{
+      data = text;
+    }
+
   }
 
   if(!response.ok){
@@ -1064,8 +990,7 @@ async function supabaseRequest(
 
 
 /* =========================================================
-   LOGIN
-   Uses public.login_user(login,password)
+   LOGIN RPC
 ========================================================= */
 
 async function loginUser(login,password){
@@ -1084,7 +1009,7 @@ async function loginUser(login,password){
 
 
 /* =========================================================
-   LOGIN FORM
+   LOGIN
 ========================================================= */
 
 loginForm.addEventListener(
@@ -1100,10 +1025,12 @@ loginForm.addEventListener(
       passwordInput.value;
 
     if(!login || !password){
+
       showLoginMessage(
         "Login ва паролро пур кунед.",
         "error"
       );
+
       return;
     }
 
@@ -1141,36 +1068,38 @@ loginForm.addEventListener(
       localStorage.setItem(
         "gotomarket_current_user",
         JSON.stringify(currentUser)
-    );
+      );
 
-    passwordInput.value = "";
+      passwordInput.value = "";
 
-    openApp();
+      await openApp();
 
-  }catch(error){
+    }catch(error){
 
-    console.error(error);
+      console.error(error);
 
-    showLoginMessage(
-      "❌ Хатои пайвастшавӣ ба база. Supabase-ро санҷед.",
-      "error"
-    );
+      showLoginMessage(
+        "❌ Пайвастшавӣ ба Supabase ноком шуд. " +
+        error.message,
+        "error"
+      );
 
-  }finally{
+    }finally{
 
-    loginButton.disabled = false;
+      loginButton.disabled = false;
 
-    loginButton.textContent =
-      "🔑 Ворид шудан";
+      loginButton.textContent =
+        "🔑 Ворид шудан";
+
+    }
 
   }
+);
 
-});
 
-
-/* =========================
+/* =========================================================
    LOGIN MESSAGE
-========================= */
+========================================================= */
 
 function showLoginMessage(message,type){
 
@@ -1183,862 +1112,29 @@ function showLoginMessage(message,type){
 }
 
 
-/* =========================
+/* =========================================================
    OPEN APP
-========================= */
+========================================================= */
 
 async function openApp(){
+
+  if(!currentUser)
+    return;
 
   loginPage.classList.add("hidden");
 
   appPage.classList.remove("hidden");
 
+  const name =
+    currentUser.full_name ||
+    currentUser.login ||
+    "User";
+
   document.getElementById("userName").textContent =
-    currentUser.full_name || currentUser.login;
+    name;
 
   document.getElementById("userRole").textContent =
     getRoleText();
 
   document.getElementById("welcome").textContent =
-    "Хуш омадед, " +
-    (currentUser.full_name || currentUser.login);
-
-  document.getElementById("subtitle").textContent =
-    getRoleText();
-
-  document.getElementById("roleStat").textContent =
-    getShortRole();
-
-  showCorrectPanel();
-
-  await loadStores();
-
-}
-
-
-/* =========================
-   ROLE
-========================= */
-
-function getRoleText(){
-
-  if(currentUser.role === "director")
-    return "👑 Director";
-
-  if(currentUser.role === "supervisor")
-    return "🧑‍💼 Supervisor";
-
-  if(currentUser.account_type === "sector")
-    return "📍 Заявщик — Сектор " +
-      currentUser.sector_id;
-
-  if(currentUser.account_type === "region")
-    return "🗺️ Заявщик — Регион " +
-      currentUser.region_id;
-
-  return "User";
-}
-
-
-function getShortRole(){
-
-  if(currentUser.role === "director")
-    return "Director";
-
-  if(currentUser.role === "supervisor")
-    return "Supervisor";
-
-  if(currentUser.account_type === "sector")
-    return "Sector";
-
-  if(currentUser.account_type === "region")
-    return "Region";
-
-  return "User";
-}
-
-
-/* =========================
-   PANELS
-========================= */
-
-function showCorrectPanel(){
-
-  document
-    .getElementById("directorPanel")
-    .classList.add("hidden");
-
-  document
-    .getElementById("supervisorPanel")
-    .classList.add("hidden");
-
-  document
-    .getElementById("sectorPanel")
-    .classList.add("hidden");
-
-  document
-    .getElementById("regionPanel")
-    .classList.add("hidden");
-
-
-  if(currentUser.role === "director"){
-
-    document
-      .getElementById("directorPanel")
-      .classList.remove("hidden");
-
-    return;
-  }
-
-
-  if(currentUser.role === "supervisor"){
-
-    document
-      .getElementById("supervisorPanel")
-      .classList.remove("hidden");
-
-    return;
-  }
-
-
-  if(currentUser.account_type === "sector"){
-
-    document
-      .getElementById("sectorPanel")
-      .classList.remove("hidden");
-
-    document
-      .getElementById("sectorText")
-      .textContent =
-      "Шумо ба Сектор " +
-      currentUser.sector_id +
-      " вобаста ҳастед. Мағозаҳои ҳамин сектор нишон дода мешаванд.";
-
-    return;
-  }
-
-
-  if(currentUser.account_type === "region"){
-
-    document
-      .getElementById("regionPanel")
-      .classList.remove("hidden");
-
-    document
-      .getElementById("regionText")
-      .textContent =
-      "Шумо ба Регион " +
-      currentUser.region_id +
-      " вобаста ҳастед. Мағозаҳои ҳамин регион нишон дода мешаванд.";
-
-  }
-
-}
-
-
-/* =========================
-   LOAD STORES
-========================= */
-
-async function loadStores(){
-
-  storeList.innerHTML =
-    '<div class="loading">⏳ Мағозаҳо бор шуда истодаанд...</div>';
-
-  try{
-
-    const data =
-      await supabaseRequest(
-        "/rest/v1/stores?select=*&order=id.desc",
-        {
-          method:"GET"
-        }
-      );
-
-    allStores =
-      Array.isArray(data)
-        ? data
-        : [];
-
-    renderStores();
-
-  }catch(error){
-
-    console.error(error);
-
-    storeList.innerHTML =
-      '<div class="empty">❌ Мағозаҳо бор нашуданд.</div>';
-
-    storeCount.textContent = "0";
-
-  }
-
-}
-
-
-/* =========================
-   VISIBLE STORES
-========================= */
-
-function getVisibleStores(){
-
-  if(!currentUser)
-    return [];
-
-
-  if(currentUser.role === "director")
-    return allStores;
-
-
-  if(currentUser.role === "supervisor")
-    return allStores;
-
-
-  if(currentUser.account_type === "sector"){
-
-    return allStores.filter(
-      store =>
-        Number(store.sector_id) ===
-        Number(currentUser.sector_id)
-    );
-
-  }
-
-
-  if(currentUser.account_type === "region"){
-
-    return allStores.filter(
-      store =>
-        Number(store.region_id) ===
-        Number(currentUser.region_id)
-    );
-
-  }
-
-
-  return [];
-
-}
-
-
-/* =========================
-   RENDER STORES
-========================= */
-
-function renderStores(){
-
-  const visibleStores =
-    getVisibleStores();
-
-  storeCount.textContent =
-    visibleStores.length;
-
-
-  if(visibleStores.length === 0){
-
-    storeList.innerHTML =
-      '<div class="empty">🏪 Ҳоло мағозае ёфт нашуд.</div>';
-
-    return;
-  }
-
-
-  storeList.innerHTML =
-    visibleStores.map(store => {
-
-      const lat =
-        Number(store.latitude);
-
-      const lng =
-        Number(store.longitude);
-
-      const hasLocation =
-        Number.isFinite(lat) &&
-        Number.isFinite(lng);
-
-
-      const mapLink =
-        hasLocation
-          ? "https://www.google.com/maps/dir/?api=1&destination=" +
-            encodeURIComponent(
-              lat + "," + lng
-            )
-          : "";
-
-
-      return `
-        <div class="store">
-
-          <div class="store-head">
-
-            <div class="store-title">
-
-              <div class="store-icon">
-                🏪
-              </div>
-
-              <div>
-
-                <h3>
-                  ${escapeHtml(
-                    store.name || "Мағоза"
-                  )}
-                </h3>
-
-                <p>
-                  ${escapeHtml(
-                    store.address ||
-                    "Суроға нишон дода нашудааст"
-                  )}
-                </p>
-
-              </div>
-
-            </div>
-
-            ${
-              hasLocation
-              ?
-              `
-                <a
-                  class="map-btn"
-                  href="${mapLink}"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  🗺️ Роҳ
-                </a>
-              `
-              :
-              ""
-            }
-
-          </div>
-
-
-          <div class="store-meta">
-
-            <span class="tag">
-              🗺️ Регион ${
-                store.region_id || "—"
-              }
-            </span>
-
-            <span class="tag">
-              📍 Сектор ${
-                store.sector_id || "—"
-              }
-            </span>
-
-            ${
-              store.phone
-              ?
-              `
-                <span class="tag">
-                  ☎️ ${escapeHtml(store.phone)}
-                </span>
-              `
-              :
-              ""
-            }
-
-          </div>
-
-
-          ${
-            store.notes
-            ?
-            `
-              <p>
-                📝 ${escapeHtml(store.notes)}
-              </p>
-            `
-            :
-            ""
-          }
-
-        </div>
-      `;
-
-    }).join("");
-
-}
-
-
-/* =========================
-   ESCAPE HTML
-========================= */
-
-function escapeHtml(value){
-
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================
-   GPS
-========================= */
-
-document
-  .getElementById("locationButton")
-  .addEventListener(
-    "click",
-    function(){
-
-      if(!navigator.geolocation){
-
-        showStoreMessage(
-          "❌ GPS дастгирӣ намешавад.",
-          "error"
-        );
-
-        return;
-      }
-
-
-      const button =
-        document.getElementById(
-          "locationButton"
-        );
-
-      button.disabled = true;
-
-      button.textContent =
-        "⏳ GPS...";
-
-
-      navigator.geolocation.getCurrentPosition(
-
-        function(position){
-
-          document.getElementById(
-            "latitude"
-          ).value =
-            position.coords.latitude.toFixed(7);
-
-          document.getElementById(
-            "longitude"
-          ).value =
-            position.coords.longitude.toFixed(7);
-
-
-          showStoreMessage(
-            "✅ Ҷойгиршавӣ гирифта шуд.",
-            "success"
-          );
-
-
-          button.disabled = false;
-
-          button.textContent =
-            "📍 Ҷойгиршавии ман";
-
-        },
-
-        function(error){
-
-          let message =
-            "❌ GPS гирифта нашуд.";
-
-          if(error.code === 1)
-            message =
-              "❌ Ба браузер иҷозаи Location диҳед.";
-
-          if(error.code === 2)
-            message =
-              "❌ Ҷойгиршавӣ дастрас нест.";
-
-          if(error.code === 3)
-            message =
-              "❌ GPS timeout шуд.";
-
-
-          showStoreMessage(
-            message,
-            "error"
-          );
-
-
-          button.disabled = false;
-
-          button.textContent =
-            "📍 Ҷойгиршавии ман";
-
-        },
-
-        {
-          enableHighAccuracy:true,
-          timeout:15000,
-          maximumAge:0
-        }
-
-      );
-
-    }
-  );
-
-
-/* =========================
-   ADD STORE
-========================= */
-
-document
-  .getElementById("addStoreButton")
-  .addEventListener(
-    "click",
-    async function(){
-
-      if(
-        !currentUser ||
-        currentUser.role !== "director"
-      ){
-
-        showStoreMessage(
-          "❌ Танҳо Director метавонад мағоза илова кунад.",
-          "error"
-        );
-
-        return;
-      }
-
-
-      const name =
-        document
-          .getElementById("storeName")
-          .value
-          .trim();
-
-      const address =
-        document
-          .getElementById("storeAddress")
-          .value
-          .trim();
-
-      const phone =
-        document
-          .getElementById("storePhone")
-          .value
-          .trim();
-
-      const region =
-        document
-          .getElementById("storeRegion")
-          .value;
-
-      const sector =
-        document
-          .getElementById("storeSector")
-          .value;
-
-      const latitudeText =
-        document
-          .getElementById("latitude")
-          .value
-          .trim();
-
-      const longitudeText =
-        document
-          .getElementById("longitude")
-          .value
-          .trim();
-
-      const notes =
-        document
-          .getElementById("notes")
-          .value
-          .trim();
-
-
-      if(!name){
-
-        showStoreMessage(
-          "❌ Номи мағозаро нависед.",
-          "error"
-        );
-
-        return;
-      }
-
-
-      if(!region){
-
-        showStoreMessage(
-          "❌ Регионро интихоб кунед.",
-          "error"
-        );
-
-        return;
-      }
-
-
-      if(!sector){
-
-        showStoreMessage(
-          "❌ Секторро интихоб кунед.",
-          "error"
-        );
-
-        return;
-      }
-
-
-      const latitude =
-        latitudeText === ""
-          ? null
-          : Number(latitudeText);
-
-      const longitude =
-        longitudeText === ""
-          ? null
-          : Number(longitudeText);
-
-
-      if(
-        latitude !== null &&
-        !Number.isFinite(latitude)
-      ){
-
-        showStoreMessage(
-          "❌ Latitude нодуруст аст.",
-          "error"
-        );
-
-        return;
-      }
-
-
-      if(
-        longitude !== null &&
-        !Number.isFinite(longitude)
-      ){
-
-        showStoreMessage(
-          "❌ Longitude нодуруст аст.",
-          "error"
-        );
-
-        return;
-      }
-
-
-      const button =
-        document.getElementById(
-          "addStoreButton"
-        );
-
-      button.disabled = true;
-
-      button.textContent =
-        "⏳ Илова мешавад...";
-
-
-      try{
-
-        await supabaseRequest(
-          "/rest/v1/rpc/add_store",
-          {
-            method:"POST",
-
-            body:JSON.stringify({
-
-              p_name:name,
-
-              p_address:
-                address || null,
-
-              p_phone:
-                phone || null,
-
-              p_latitude:
-                latitude,
-
-              p_longitude:
-                longitude,
-
-              p_region_id:
-                Number(region),
-
-              p_sector_id:
-                Number(sector),
-
-              p_notes:
-                notes || null
-
-            })
-          }
-        );
-
-
-        showStoreMessage(
-          "✅ Мағоза илова шуд.",
-          "success"
-        );
-
-
-        document
-          .getElementById("storeName")
-          .value = "";
-
-        document
-          .getElementById("storeAddress")
-          .value = "";
-
-        document
-          .getElementById("storePhone")
-          .value = "";
-
-        document
-          .getElementById("storeRegion")
-          .value = "";
-
-        document
-          .getElementById("storeSector")
-          .value = "";
-
-        document
-          .getElementById("latitude")
-          .value = "";
-
-        document
-          .getElementById("longitude")
-          .value = "";
-
-        document
-          .getElementById("notes")
-          .value = "";
-
-
-        await loadStores();
-
-      }catch(error){
-
-        console.error(error);
-
-        showStoreMessage(
-          "❌ Хато: " +
-          error.message,
-          "error"
-        );
-
-      }finally{
-
-        button.disabled = false;
-
-        button.textContent =
-          "➕ Илова кардани мағоза";
-
-      }
-
-    }
-  );
-
-
-/* =========================
-   STORE MESSAGE
-========================= */
-
-function showStoreMessage(message,type){
-
-  storeMessage.className =
-    "message " + type;
-
-  storeMessage.textContent =
-    message;
-
-}
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-logoutButton.addEventListener(
-  "click",
-  function(){
-
-    currentUser = null;
-
-    localStorage.removeItem(
-      "gotomarket_current_user"
-    );
-
-    appPage.classList.add("hidden");
-
-    loginPage.classList.remove("hidden");
-
-    loginForm.reset();
-
-    loginMessage.textContent = "";
-
-    loginMessage.className = "";
-
-  }
-);
-
-
-/* =========================
-   RESTORE SESSION
-========================= */
-
-async function restoreSession(){
-
-  const saved =
-    localStorage.getItem(
-      "gotomarket_current_user"
-    );
-
-  if(!saved)
-    return;
-
-
-  try{
-
-    const user =
-      JSON.parse(saved);
-
-    if(
-      !user ||
-      !user.id ||
-      !user.login
-    ){
-
-      localStorage.removeItem(
-        "gotomarket_current_user"
-      );
-
-      return;
-    }
-
-    currentUser = user;
-
-    await openApp();
-
-  }catch(error){
-
-    console.error(error);
-
-    localStorage.removeItem(
-      "gotomarket_current_user"
-    );
-
-  }
-
-}
-
-
-/* =========================
-   START
-========================= */
-
-restoreSession();
-
-</script>
-
-</body>
-</html>
+   
