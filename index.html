@@ -1140,4 +1140,905 @@ loginForm.addEventListener(
 
       localStorage.setItem(
         "gotomarket_current_user",
-        JSON.stringify(cu
+        JSON.stringify(currentUser)
+    );
+
+    passwordInput.value = "";
+
+    openApp();
+
+  }catch(error){
+
+    console.error(error);
+
+    showLoginMessage(
+      "❌ Хатои пайвастшавӣ ба база. Supabase-ро санҷед.",
+      "error"
+    );
+
+  }finally{
+
+    loginButton.disabled = false;
+
+    loginButton.textContent =
+      "🔑 Ворид шудан";
+
+  }
+
+});
+
+
+/* =========================
+   LOGIN MESSAGE
+========================= */
+
+function showLoginMessage(message,type){
+
+  loginMessage.className =
+    "message " + type;
+
+  loginMessage.textContent =
+    message;
+
+}
+
+
+/* =========================
+   OPEN APP
+========================= */
+
+async function openApp(){
+
+  loginPage.classList.add("hidden");
+
+  appPage.classList.remove("hidden");
+
+  document.getElementById("userName").textContent =
+    currentUser.full_name || currentUser.login;
+
+  document.getElementById("userRole").textContent =
+    getRoleText();
+
+  document.getElementById("welcome").textContent =
+    "Хуш омадед, " +
+    (currentUser.full_name || currentUser.login);
+
+  document.getElementById("subtitle").textContent =
+    getRoleText();
+
+  document.getElementById("roleStat").textContent =
+    getShortRole();
+
+  showCorrectPanel();
+
+  await loadStores();
+
+}
+
+
+/* =========================
+   ROLE
+========================= */
+
+function getRoleText(){
+
+  if(currentUser.role === "director")
+    return "👑 Director";
+
+  if(currentUser.role === "supervisor")
+    return "🧑‍💼 Supervisor";
+
+  if(currentUser.account_type === "sector")
+    return "📍 Заявщик — Сектор " +
+      currentUser.sector_id;
+
+  if(currentUser.account_type === "region")
+    return "🗺️ Заявщик — Регион " +
+      currentUser.region_id;
+
+  return "User";
+}
+
+
+function getShortRole(){
+
+  if(currentUser.role === "director")
+    return "Director";
+
+  if(currentUser.role === "supervisor")
+    return "Supervisor";
+
+  if(currentUser.account_type === "sector")
+    return "Sector";
+
+  if(currentUser.account_type === "region")
+    return "Region";
+
+  return "User";
+}
+
+
+/* =========================
+   PANELS
+========================= */
+
+function showCorrectPanel(){
+
+  document
+    .getElementById("directorPanel")
+    .classList.add("hidden");
+
+  document
+    .getElementById("supervisorPanel")
+    .classList.add("hidden");
+
+  document
+    .getElementById("sectorPanel")
+    .classList.add("hidden");
+
+  document
+    .getElementById("regionPanel")
+    .classList.add("hidden");
+
+
+  if(currentUser.role === "director"){
+
+    document
+      .getElementById("directorPanel")
+      .classList.remove("hidden");
+
+    return;
+  }
+
+
+  if(currentUser.role === "supervisor"){
+
+    document
+      .getElementById("supervisorPanel")
+      .classList.remove("hidden");
+
+    return;
+  }
+
+
+  if(currentUser.account_type === "sector"){
+
+    document
+      .getElementById("sectorPanel")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("sectorText")
+      .textContent =
+      "Шумо ба Сектор " +
+      currentUser.sector_id +
+      " вобаста ҳастед. Мағозаҳои ҳамин сектор нишон дода мешаванд.";
+
+    return;
+  }
+
+
+  if(currentUser.account_type === "region"){
+
+    document
+      .getElementById("regionPanel")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("regionText")
+      .textContent =
+      "Шумо ба Регион " +
+      currentUser.region_id +
+      " вобаста ҳастед. Мағозаҳои ҳамин регион нишон дода мешаванд.";
+
+  }
+
+}
+
+
+/* =========================
+   LOAD STORES
+========================= */
+
+async function loadStores(){
+
+  storeList.innerHTML =
+    '<div class="loading">⏳ Мағозаҳо бор шуда истодаанд...</div>';
+
+  try{
+
+    const data =
+      await supabaseRequest(
+        "/rest/v1/stores?select=*&order=id.desc",
+        {
+          method:"GET"
+        }
+      );
+
+    allStores =
+      Array.isArray(data)
+        ? data
+        : [];
+
+    renderStores();
+
+  }catch(error){
+
+    console.error(error);
+
+    storeList.innerHTML =
+      '<div class="empty">❌ Мағозаҳо бор нашуданд.</div>';
+
+    storeCount.textContent = "0";
+
+  }
+
+}
+
+
+/* =========================
+   VISIBLE STORES
+========================= */
+
+function getVisibleStores(){
+
+  if(!currentUser)
+    return [];
+
+
+  if(currentUser.role === "director")
+    return allStores;
+
+
+  if(currentUser.role === "supervisor")
+    return allStores;
+
+
+  if(currentUser.account_type === "sector"){
+
+    return allStores.filter(
+      store =>
+        Number(store.sector_id) ===
+        Number(currentUser.sector_id)
+    );
+
+  }
+
+
+  if(currentUser.account_type === "region"){
+
+    return allStores.filter(
+      store =>
+        Number(store.region_id) ===
+        Number(currentUser.region_id)
+    );
+
+  }
+
+
+  return [];
+
+}
+
+
+/* =========================
+   RENDER STORES
+========================= */
+
+function renderStores(){
+
+  const visibleStores =
+    getVisibleStores();
+
+  storeCount.textContent =
+    visibleStores.length;
+
+
+  if(visibleStores.length === 0){
+
+    storeList.innerHTML =
+      '<div class="empty">🏪 Ҳоло мағозае ёфт нашуд.</div>';
+
+    return;
+  }
+
+
+  storeList.innerHTML =
+    visibleStores.map(store => {
+
+      const lat =
+        Number(store.latitude);
+
+      const lng =
+        Number(store.longitude);
+
+      const hasLocation =
+        Number.isFinite(lat) &&
+        Number.isFinite(lng);
+
+
+      const mapLink =
+        hasLocation
+          ? "https://www.google.com/maps/dir/?api=1&destination=" +
+            encodeURIComponent(
+              lat + "," + lng
+            )
+          : "";
+
+
+      return `
+        <div class="store">
+
+          <div class="store-head">
+
+            <div class="store-title">
+
+              <div class="store-icon">
+                🏪
+              </div>
+
+              <div>
+
+                <h3>
+                  ${escapeHtml(
+                    store.name || "Мағоза"
+                  )}
+                </h3>
+
+                <p>
+                  ${escapeHtml(
+                    store.address ||
+                    "Суроға нишон дода нашудааст"
+                  )}
+                </p>
+
+              </div>
+
+            </div>
+
+            ${
+              hasLocation
+              ?
+              `
+                <a
+                  class="map-btn"
+                  href="${mapLink}"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  🗺️ Роҳ
+                </a>
+              `
+              :
+              ""
+            }
+
+          </div>
+
+
+          <div class="store-meta">
+
+            <span class="tag">
+              🗺️ Регион ${
+                store.region_id || "—"
+              }
+            </span>
+
+            <span class="tag">
+              📍 Сектор ${
+                store.sector_id || "—"
+              }
+            </span>
+
+            ${
+              store.phone
+              ?
+              `
+                <span class="tag">
+                  ☎️ ${escapeHtml(store.phone)}
+                </span>
+              `
+              :
+              ""
+            }
+
+          </div>
+
+
+          ${
+            store.notes
+            ?
+            `
+              <p>
+                📝 ${escapeHtml(store.notes)}
+              </p>
+            `
+            :
+            ""
+          }
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================
+   GPS
+========================= */
+
+document
+  .getElementById("locationButton")
+  .addEventListener(
+    "click",
+    function(){
+
+      if(!navigator.geolocation){
+
+        showStoreMessage(
+          "❌ GPS дастгирӣ намешавад.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      const button =
+        document.getElementById(
+          "locationButton"
+        );
+
+      button.disabled = true;
+
+      button.textContent =
+        "⏳ GPS...";
+
+
+      navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+          document.getElementById(
+            "latitude"
+          ).value =
+            position.coords.latitude.toFixed(7);
+
+          document.getElementById(
+            "longitude"
+          ).value =
+            position.coords.longitude.toFixed(7);
+
+
+          showStoreMessage(
+            "✅ Ҷойгиршавӣ гирифта шуд.",
+            "success"
+          );
+
+
+          button.disabled = false;
+
+          button.textContent =
+            "📍 Ҷойгиршавии ман";
+
+        },
+
+        function(error){
+
+          let message =
+            "❌ GPS гирифта нашуд.";
+
+          if(error.code === 1)
+            message =
+              "❌ Ба браузер иҷозаи Location диҳед.";
+
+          if(error.code === 2)
+            message =
+              "❌ Ҷойгиршавӣ дастрас нест.";
+
+          if(error.code === 3)
+            message =
+              "❌ GPS timeout шуд.";
+
+
+          showStoreMessage(
+            message,
+            "error"
+          );
+
+
+          button.disabled = false;
+
+          button.textContent =
+            "📍 Ҷойгиршавии ман";
+
+        },
+
+        {
+          enableHighAccuracy:true,
+          timeout:15000,
+          maximumAge:0
+        }
+
+      );
+
+    }
+  );
+
+
+/* =========================
+   ADD STORE
+========================= */
+
+document
+  .getElementById("addStoreButton")
+  .addEventListener(
+    "click",
+    async function(){
+
+      if(
+        !currentUser ||
+        currentUser.role !== "director"
+      ){
+
+        showStoreMessage(
+          "❌ Танҳо Director метавонад мағоза илова кунад.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      const name =
+        document
+          .getElementById("storeName")
+          .value
+          .trim();
+
+      const address =
+        document
+          .getElementById("storeAddress")
+          .value
+          .trim();
+
+      const phone =
+        document
+          .getElementById("storePhone")
+          .value
+          .trim();
+
+      const region =
+        document
+          .getElementById("storeRegion")
+          .value;
+
+      const sector =
+        document
+          .getElementById("storeSector")
+          .value;
+
+      const latitudeText =
+        document
+          .getElementById("latitude")
+          .value
+          .trim();
+
+      const longitudeText =
+        document
+          .getElementById("longitude")
+          .value
+          .trim();
+
+      const notes =
+        document
+          .getElementById("notes")
+          .value
+          .trim();
+
+
+      if(!name){
+
+        showStoreMessage(
+          "❌ Номи мағозаро нависед.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if(!region){
+
+        showStoreMessage(
+          "❌ Регионро интихоб кунед.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if(!sector){
+
+        showStoreMessage(
+          "❌ Секторро интихоб кунед.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      const latitude =
+        latitudeText === ""
+          ? null
+          : Number(latitudeText);
+
+      const longitude =
+        longitudeText === ""
+          ? null
+          : Number(longitudeText);
+
+
+      if(
+        latitude !== null &&
+        !Number.isFinite(latitude)
+      ){
+
+        showStoreMessage(
+          "❌ Latitude нодуруст аст.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      if(
+        longitude !== null &&
+        !Number.isFinite(longitude)
+      ){
+
+        showStoreMessage(
+          "❌ Longitude нодуруст аст.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      const button =
+        document.getElementById(
+          "addStoreButton"
+        );
+
+      button.disabled = true;
+
+      button.textContent =
+        "⏳ Илова мешавад...";
+
+
+      try{
+
+        await supabaseRequest(
+          "/rest/v1/rpc/add_store",
+          {
+            method:"POST",
+
+            body:JSON.stringify({
+
+              p_name:name,
+
+              p_address:
+                address || null,
+
+              p_phone:
+                phone || null,
+
+              p_latitude:
+                latitude,
+
+              p_longitude:
+                longitude,
+
+              p_region_id:
+                Number(region),
+
+              p_sector_id:
+                Number(sector),
+
+              p_notes:
+                notes || null
+
+            })
+          }
+        );
+
+
+        showStoreMessage(
+          "✅ Мағоза илова шуд.",
+          "success"
+        );
+
+
+        document
+          .getElementById("storeName")
+          .value = "";
+
+        document
+          .getElementById("storeAddress")
+          .value = "";
+
+        document
+          .getElementById("storePhone")
+          .value = "";
+
+        document
+          .getElementById("storeRegion")
+          .value = "";
+
+        document
+          .getElementById("storeSector")
+          .value = "";
+
+        document
+          .getElementById("latitude")
+          .value = "";
+
+        document
+          .getElementById("longitude")
+          .value = "";
+
+        document
+          .getElementById("notes")
+          .value = "";
+
+
+        await loadStores();
+
+      }catch(error){
+
+        console.error(error);
+
+        showStoreMessage(
+          "❌ Хато: " +
+          error.message,
+          "error"
+        );
+
+      }finally{
+
+        button.disabled = false;
+
+        button.textContent =
+          "➕ Илова кардани мағоза";
+
+      }
+
+    }
+  );
+
+
+/* =========================
+   STORE MESSAGE
+========================= */
+
+function showStoreMessage(message,type){
+
+  storeMessage.className =
+    "message " + type;
+
+  storeMessage.textContent =
+    message;
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+logoutButton.addEventListener(
+  "click",
+  function(){
+
+    currentUser = null;
+
+    localStorage.removeItem(
+      "gotomarket_current_user"
+    );
+
+    appPage.classList.add("hidden");
+
+    loginPage.classList.remove("hidden");
+
+    loginForm.reset();
+
+    loginMessage.textContent = "";
+
+    loginMessage.className = "";
+
+  }
+);
+
+
+/* =========================
+   RESTORE SESSION
+========================= */
+
+async function restoreSession(){
+
+  const saved =
+    localStorage.getItem(
+      "gotomarket_current_user"
+    );
+
+  if(!saved)
+    return;
+
+
+  try{
+
+    const user =
+      JSON.parse(saved);
+
+    if(
+      !user ||
+      !user.id ||
+      !user.login
+    ){
+
+      localStorage.removeItem(
+        "gotomarket_current_user"
+      );
+
+      return;
+    }
+
+    currentUser = user;
+
+    await openApp();
+
+  }catch(error){
+
+    console.error(error);
+
+    localStorage.removeItem(
+      "gotomarket_current_user"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+restoreSession();
+
+</script>
+
+</body>
+</html>
